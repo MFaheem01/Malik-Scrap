@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@source "../client";
+@source "../components";
+@source "../app";
+@source "..";
+
+@theme {
+  --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --color-industrial-orange: #f05a22;
+  --color-industrial-navy: #0f172a;
+}
+
+@layer base {
+  html {
+    font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* Custom animation & slider styles */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

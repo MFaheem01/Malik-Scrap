@@ -1,0 +1,8 @@
+{
+  "name": "Malik Scrap Metal  ",
+  "description": "Industrial scrap metal , processing, container dispatch, and real-time scrap valuation with administrative management dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

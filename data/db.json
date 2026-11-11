@@ -1,0 +1,249 @@
+{
+  "contact": {
+    "companyName": "Malik Scrap Metal Buyers",
+    "tagline": "We Buy Industrial & Commercial Scrap Metal at Top Market Rates",
+    "phone": "+971 50 436 3615",
+    "dispatchPhone": "+971 50 436 3615",
+    "email": "malikscrapdealer11@gmail.com",
+    "secondaryEmail": "purchase@malikscrap.com",
+    "address": "Dubai Industrial City, Phase 2, Dubai, UAE",
+    "city": "Dubai",
+    "state": "Dubai",
+    "zip": "500001",
+    "country": "United Arab Emirates",
+    "hoursWeekday": "24/7 Scrap Receiving & Site Pickup",
+    "hoursSaturday": "24/7 Weighbridge Open",
+    "hoursSunday": "24/7 On-Call Dispatch",
+    "googleMapsUrl": "https://maps.app.goo.gl/4jdRcf7gbDx4L1Z59",
+    "emergencyHotline": "24/7 Scrap Collection & Container Placement Hotline",
+    "social": {
+      "facebook": "https://facebook.com",
+      "twitter": "https://twitter.com",
+      "linkedin": "https://linkedin.com",
+      "youtube": "https://youtube.com"
+    },
+    "_id": "main"
+  },
+  "admin": {
+    "username": "malikrashid",
+    "password": "$2b$12$Y9e/mr7yEimu1lcGrQfw6Om7jXN5eTa78N6241zG.zD0.t5yJkUa2",
+    "isHashed": true,
+    "_id": "main"
+  },
+  "services": [
+    {
+      "id": "srv-1",
+      "title": "We Buy Ferrous Metal Scrap",
+      "category": "Ferrous Scrap",
+      "shortDesc": "Immediate purchase of heavy melting steel (HMS 1 & 2), structural I-beams, factory rebar offcuts, plate cuttings, cast iron, and machinery frames.",
+      "description": "We purchase all volumes of ferrous metal scrap directly from fabrication workshops, machine shops, construction contractors, and demolition sites. Full certified weighbridge receipts with direct mill pricing and zero middleman deductions.",
+      "icon": "Hammer",
+      "image": "/assets/images/ferrous_steel_re.jpg",
+      "badge": "High Tonnage",
+      "highlight": "Top cash & wire payout per metric ton with free collection."
+    },
+    {
+      "id": "srv-2",
+      "title": "We Buy Copper Wire & Tubing",
+      "category": "Non-Ferrous Scrap",
+      "shortDesc": "Top-market rates paid for Bare Bright copper wire, Millberry copper, #1 & #2 copper tubing, armored power cables, and transformer windings.",
+      "description": "Sell your copper scrap to certified buyers. Using handheld XRF elemental spectrometers, we grade copper purity on the spot, guaranteeing honest tare deductions and the highest daily payout in cash or instant bank transfer.",
+      "icon": "Zap",
+      "image": "/assets/images/copper_wire_brass_1793892530421.jpg",
+      "badge": "Highest Payout",
+      "highlight": "Instant XRF assay test with immediate payment."
+    },
+    {
+      "id": "srv-3",
+      "title": "Free Roll-Off Scrap Bin Placement",
+      "category": "Logistics & Collection",
+      "shortDesc": "We drop off 10, 20, 30, and 40-yard heavy-duty steel scrap containers at your workshop or job site free of charge. Fill the bin, and we buy the metal.",
+      "description": "Streamline your facility scrap management. When your scrap bin is full, call our dispatch hotline—we swap the container within 24 hours, weigh your scrap on certified scales, and settle your payment immediately.",
+      "icon": "Truck",
+      "image": "/assets/images/industrial_scrap_containers_1793892531220.jpg",
+      "badge": "Free Delivery",
+      "highlight": "Zero bin rental fees with scheduled or on-call collection."
+    },
+    {
+      "id": "srv-4",
+      "title": "Plant Decommissioning & Demolition Scrap Purchase",
+      "category": "Industrial Buyout",
+      "shortDesc": "Complete scrap buyouts for retired manufacturing facilities, chillers, electrical switchgears, structural steel buildings, and industrial boilers.",
+      "description": "Our certified dismantling crews manage turnkey salvage and removal. We purchase all recovered scrap metal on-site, providing crane mobilization, torch cutting, and full site clearance with environmental documentation.",
+      "icon": "Wrench",
+      "image": "/assets/images/hero_scrap_facility_1793892530533.jpg",
+      "badge": "Turnkey Buyout",
+      "highlight": "Complete plant clearance with advance scrap deposit."
+    },
+    {
+      "id": "srv-5",
+      "title": "We Buy Aluminum & Stainless Steel",
+      "category": "Alloy Scrap",
+      "shortDesc": "Purchasing 6063 clean aluminum extrusion, alloy wheels, sheet offcuts, CNC turnings, and grades 304, 316, and 310 stainless steel.",
+      "description": "Turn your production offcuts and manufacturing scrap into steady cash flow. We accept both clean solids and unsegregated machine turnings, offering customized pickup schedules for CNC machine shops and extrusion plants.",
+      "icon": "Layers",
+      "image": "/assets/images/copper_wire_brass_1793892530421.jpg",
+      "badge": "Daily Buying",
+      "highlight": "Consistent high rates for industrial manufacturers."
+    },
+    {
+      "id": "srv-6",
+      "title": "We Buy Brass, Batteries & Automotive Scrap",
+      "category": "Automotive & Brass",
+      "shortDesc": "Purchasing yellow and red brass fixtures, bronze bushings, industrial lead-acid batteries, automotive engines, transmissions, and catalytic converters.",
+      "description": "We purchase commercial batches of scrap automotive parts, heavy equipment batteries, and brass plumbing scrap. Certified depollution and recycling documentation provided for all industrial clients.",
+      "icon": "Car",
+      "image": "/assets/images/ferrous_steel_re.jpg",
+      "badge": "Instant Settlement",
+      "highlight": "Certified scale weighing and immediate bank wire."
+    }
+  ],
+  "blogs": [
+    {
+      "id": "blog-1",
+      "title": "How Machine Shops Can Maximize Revenue Selling Scrap Metal",
+      "slug": "maximize-revenue-selling-scrap-metal",
+      "excerpt": "Learn practical segregation protocols for copper, aluminum, and stainless steel chips to avoid scrap buyer discounts.",
+      "content": "For fabrication workshops and CNC machine plants, scrap metal is a significant revenue stream. Segregating high-grade solids from turnings and avoiding oil contamination can boost your scrap payouts by up to 35%. Learn our certified grading tips.",
+      "author": "Marcus Vance, Senior Scrap Appraiser",
+      "date": "November 2, 2026",
+      "commentsCount": 18,
+      "image": "/assets/images/copper_wire_brass_1793892530421.jpg",
+      "category": "Selling Guide"
+    },
+    {
+      "id": "blog-2",
+      "title": "Current Market Trends: What Scrap Buyers Look for in Copper & Brass",
+      "slug": "current-market-trends-copper-brass-scrap",
+      "excerpt": "Global infrastructure demand continues to drive premium rates for Millberry copper, clean tubing, and red brass valves.",
+      "content": "Selling your copper scrap at the right time requires understanding international COMEX and LME trends. Discover why Bare Bright copper commands the highest premium and how our on-site XRF testing guarantees accurate payouts.",
+      "author": "Elena Rostova, Chief Metal Buyer",
+      "date": "October 19, 2026",
+      "commentsCount": 24,
+      "image": "/assets/images/industrial_scrap_containers_1793892531220.jpg",
+      "category": "Market Trends"
+    },
+    {
+      "id": "blog-3",
+      "title": "Complete Guide to Selling Demolition Scrap & Heavy Melting Steel",
+      "slug": "guide-to-selling-demolition-scrap-steel",
+      "excerpt": "From structural I-beams to rebar bundles: how to prepare demolition metal for maximum tonnage payout.",
+      "content": "Demolition projects generate massive volumes of heavy melting steel (HMS 1 & 2). Learn how our on-site mobile shearing, magnetic crane loading, and roll-off scrap bin logistics make selling demolition metal fast, safe, and highly profitable.",
+      "author": "David Chen, Yard Operations Director",
+      "date": "September 28, 2026",
+      "commentsCount": 31,
+      "image": "/assets/images/hero_scrap_facility_1793892530533.jpg",
+      "category": "Demolition Salvage"
+    }
+  ],
+  "prices": [
+    {
+      "metal": "Bare Bright Copper Wire",
+      "price": "34.50 AED",
+      "unit": "per kg",
+      "trend": "up",
+      "change": "+1.20"
+    },
+    {
+      "metal": "#1 Clean Copper Tubing",
+      "price": "32.00 AED",
+      "unit": "per kg",
+      "trend": "up",
+      "change": "+0.80"
+    },
+    {
+      "metal": "Clean Yellow Brass Solids",
+      "price": "21.50 AED",
+      "unit": "per kg",
+      "trend": "up",
+      "change": "+0.50"
+    },
+    {
+      "metal": "6063 Clean Aluminum Extrusion",
+      "price": "8.20 AED",
+      "unit": "per kg",
+      "trend": "stable",
+      "change": "0.00"
+    },
+    {
+      "metal": "304 Stainless Steel Solids",
+      "price": "5.60 AED",
+      "unit": "per kg",
+      "trend": "up",
+      "change": "+0.30"
+    },
+    {
+      "metal": "HMS 1 & 2 Heavy Melting Steel",
+      "price": "1,450 AED",
+      "unit": "per ton",
+      "trend": "up",
+      "change": "+45.00"
+    },
+    {
+      "metal": "Industrial Lead Batteries",
+      "price": "4.90 AED",
+      "unit": "per kg",
+      "trend": "stable",
+      "change": "0.00"
+    },
+    {
+      "metal": "Scrap Electric Motors",
+      "price": "6.50 AED",
+      "unit": "per kg",
+      "trend": "up",
+      "change": "+0.25"
+    }
+  ],
+  "consultations": [
+    {
+      "id": "lead-1794402032041",
+      "name": "Dr. Saeed Bin Talib",
+      "email": "Saeed@example.com",
+      "phone": "03154937411",
+      "subject": "Sell Scrap Metal - Valuation & Offer Request",
+      "message": "mein nsuihiwefhwiehwiuhwiuhwiuhweeihweihweihweifhweifhweihweifhweihwifwiwei",
+      "date": "2026-11-11 13:00",
+      "status": "New"
+    },
+    {
+      "id": "lead-1794402003056",
+      "name": "M Faheem",
+      "email": "oyit8t@gmail.com",
+      "phone": "03154937411",
+      "subject": "Sell Scrap Metal - Valuation & Offer Request",
+      "message": "jhjguyyugyugyuguyguyuguguuuuiiiggugyyygyuuiuggugiuguigugugugi",
+      "date": "2026-11-11 13:00",
+      "status": "New"
+    },
+    {
+      "id": "lead-1794401940406",
+      "name": "M Faheem",
+      "email": "oyit8t@gmail.com",
+      "phone": "03154937411",
+      "subject": "Sell Scrap Metal - Valuation & Offer Request",
+      "message": "hdufhweiufhweiuhweuihweihiuwehifhiweifweui",
+      "date": "2026-11-11 12:59",
+      "status": "New"
+    },
+    {
+      "id": "lead-1",
+      "name": "Ahmed Al-Mansoor",
+      "email": "a.mansoor@emiratesfabrication.ae",
+      "phone": "+971 52 984 1120",
+      "subject": "Selling 15 Tons of Structural Steel & Plate Offcuts",
+      "message": "We have finished a warehouse project in Dubai Industrial City and have approx 15 metric tons of HMS steel and beam cutoffs for immediate sale. Need roll-off bin.",
+      "date": "2026-11-09 11:30",
+      "status": "New"
+    },
+    {
+      "id": "lead-2",
+      "name": "Rajesh Sharma",
+      "email": "r.sharma@alquozmachining.com",
+      "phone": "+971 55 319 8840",
+      "subject": "Weekly Pickup for Brass & Aluminum Machine Turnings",
+      "message": "CNC workshop generating around 2 tons of 6061 aluminum turnings and 800 kg of yellow brass chips per month. Looking for steady scrap buying contract.",
+      "date": "2026-11-08 16:15",
+      "status": "In Progress"
+    }
+  ]
+}
