@@ -33,15 +33,15 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center justify-between h-20">
           {/* Logo brand */}
           <a href="#home" className="flex items-center gap-3 group focus:outline-none">
-            <div className="w-12 h-12 rounded-lg bg-orange-600 flex items-center justify-center text-white shadow-md shadow-orange-600/20 group-hover:bg-orange-700 transition-colors">
-              <Factory className="w-7 h-7" />
+            <div className="w-11 h-11 rounded-lg bg-orange-600 flex items-center justify-center text-white shadow-md shadow-orange-600/20 group-hover:bg-orange-700 transition-colors">
+              <Factory className="w-6 h-6" />
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-bold text-slate-900 tracking-tight flex items-center">
-                Ferro<span className="text-orange-600">Max</span>
+              <span className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight flex items-center">
+                Malik<span className="text-orange-600">Scrap</span>
               </span>
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 -mt-1">
-                Industrial Scrap
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 -mt-1">
+                Metal Buyers
               </span>
             </div>
           </a>
@@ -52,13 +52,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               <a
                 key={link.name}
                 href={link.href}
-                className={`text-sm font-semibold transition-colors relative py-1 ${activeSection === link.href.substring(1)
-                  ? 'text-orange-600'
-                  : 'text-slate-700 hover:text-orange-600'
-                  }`}
+                className={`text-sm font-semibold transition-colors relative py-1 ${
+                  activeSection === link.href.substring(1)
+                    ? 'text-orange-600'
+                    : 'text-slate-700 hover:text-orange-600'
+                }`}
               >
                 {link.name}
-                {activeSection === link.href.substring(1)(
+                {activeSection === link.href.substring(1) && (
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-orange-600 rounded-full" />
                 )}
               </a>
@@ -72,17 +73,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={onOpenSearch}
               className="w-10 h-10 rounded-lg border border-slate-200 flex items-center justify-center text-slate-600 hover:text-orange-600 hover:border-orange-500 hover:bg-orange-50/50 transition-colors cursor-pointer"
               aria-label="Search services and scrap rates"
-              title="Search scrap metals  services"
+              title="Search scrap metals & services"
             >
               <Search className="w-4 h-4" />
             </button>
 
-            {/* Primary Action Button (Matches Screenshot 4 'Get Support') */}
+            {/* Primary Action Button */}
             <button
               onClick={onRequestQuote}
               className="bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white font-semibold text-sm px-5 py-3 rounded-lg shadow-md shadow-orange-600/20 transition-all flex items-center gap-2 cursor-pointer"
             >
-              <span>Get Support</span>
+              <span>Get Quote</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -108,15 +109,19 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Mobile dropdown menu */}
-      {mobileMenuOpen(
-        <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-3 shadow-lg">
+      {mobileMenuOpen && (
+        <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-3 shadow-xl animate-in slide-in-from-top-2 duration-200">
           <div className="grid grid-cols-1 gap-1">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2.5 rounded-md text-base font-medium text-slate-800 hover:text-orange-600 hover:bg-orange-50 transition-colors"
+                className={`px-3 py-2.5 rounded-md text-base font-medium transition-colors ${
+                  activeSection === link.href.substring(1)
+                    ? 'text-orange-600 bg-orange-50 font-bold'
+                    : 'text-slate-800 hover:text-orange-600 hover:bg-orange-50'
+                }`}
               >
                 {link.name}
               </a>
@@ -128,13 +133,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setMobileMenuOpen(false);
                 onRequestQuote();
               }}
-              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-4 rounded-lg text-center flex items-center justify-center gap-2 shadow-sm"
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-4 rounded-lg text-center flex items-center justify-center gap-2 shadow-sm cursor-pointer"
             >
               <span>Request Scrap Pickup</span>
               <ArrowRight className="w-4 h-4" />
             </button>
             <div className="text-center text-xs text-slate-500 mt-1">
-              Dispatch: <span className="font-semibold text-slate-700">{contact.phone}</span>
+              Dispatch Hotline: <span className="font-semibold text-slate-700">{contact.phone}</span>
             </div>
           </div>
         </div>

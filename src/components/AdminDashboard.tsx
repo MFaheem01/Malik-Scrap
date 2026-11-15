@@ -1035,7 +1035,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-xl font-bold text-slate-900">
-                      Contact Details  Yard Location Settings
+                      Contact Details  Location Settings
                     </h3>
                     <p className="text-xs text-slate-500">
                       Update the business phone number, email address, physical yard address, and scale hours.

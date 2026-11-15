@@ -1,4 +1,10 @@
 {
+  "admin": {
+    "username": "malikrashid",
+    "password": "$2b$12$Y9e/mr7yEimu1lcGrQfw6Om7jXN5eTa78N6241zG.zD0.t5yJkUa2",
+    "isHashed": true,
+    "_id": "main"
+  },
   "contact": {
     "companyName": "Malik Scrap Metal Buyers",
     "tagline": "We Buy Industrial & Commercial Scrap Metal at Top Market Rates",
@@ -22,12 +28,6 @@
       "linkedin": "https://linkedin.com",
       "youtube": "https://youtube.com"
     },
-    "_id": "main"
-  },
-  "admin": {
-    "username": "malikrashid",
-    "password": "$2b$12$Y9e/mr7yEimu1lcGrQfw6Om7jXN5eTa78N6241zG.zD0.t5yJkUa2",
-    "isHashed": true,
     "_id": "main"
   },
   "services": [
@@ -195,6 +195,46 @@
     }
   ],
   "consultations": [
+    {
+      "id": "lead-1794640310343",
+      "name": "Dr. Saeed Bin Talib",
+      "email": "Saeed@example.com",
+      "phone": "+923154937411",
+      "subject": "Scrap Purchase Quote: Free Scrap Container Placement",
+      "message": "wekfhefheihfeifhwef",
+      "date": "2026-11-14 07:11",
+      "status": "New"
+    },
+    {
+      "id": "lead-1794568911905",
+      "name": "wehiu",
+      "email": "mf7227163@gmail.com",
+      "phone": "857459344",
+      "subject": "Sell Scrap Metal - Valuation & Offer Request",
+      "message": "kdjrkddfj",
+      "date": "2026-11-13 11:21",
+      "status": "New"
+    },
+    {
+      "id": "lead-1794568741158",
+      "name": "ueeuif",
+      "email": "mf7227164@gmail.com",
+      "phone": "398573497349857",
+      "subject": "Sell Scrap Metal - Valuation & Offer Request",
+      "message": "34834uergjj",
+      "date": "2026-11-13 11:19",
+      "status": "New"
+    },
+    {
+      "id": "lead-1794568466043",
+      "name": "Dr. Saeed Bin Talib",
+      "email": "Saeed@example.com",
+      "phone": "ewjfwjewjh",
+      "subject": "Sell Scrap Metal - Valuation & Offer Request",
+      "message": "wekjhwehiwuefwi",
+      "date": "2026-11-13 11:14",
+      "status": "New"
+    },
     {
       "id": "lead-1794402032041",
       "name": "Dr. Saeed Bin Talib",

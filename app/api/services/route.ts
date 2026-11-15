@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       shortDesc: sanitizeString(body.shortDesc) || '',
       description: sanitizeString(body.description) || '',
       icon: sanitizeString(body.icon) || 'Hammer',
-      image: sanitizeString(body.image) || '/assets/images/ferrous_steel_re.jpg',
+      image: sanitizeString(body.image) || '/assets/images/service-copper-wire.jpg',
       badge: sanitizeString(body.badge) || 'We Buy',
       highlight: sanitizeString(body.highlight) || '',
     };

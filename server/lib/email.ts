@@ -112,7 +112,7 @@ export async function sendLeadNotifications(payload: LeadEmailPayload): Promise<
             </div>
 
             <p style="font-size: 12px; color: #64748b; margin-top: 20px;">
-              Yard Location: Dubai Industrial City, Phase 2, Dubai, United Arab Emirates.<br>
+              Location: Dubai Industrial City, Phase 2, Dubai, United Arab Emirates.<br>
               Certified 100-Ton Digital Weighbridge open 24/7.
             </p>
           </div>

@@ -44,22 +44,22 @@ export const FreeDelivery: React.FC<FreeDeliveryProps> = ({ onGetQuote }) => {
     {
       icon: Truck,
       title: 'Free Delivery & Drop-off',
-      description: 'Zero drop fees for industrial and commercial accounts producing qualifying scrap volumes.',
+      description: 'We offer free scrap pickup and drop-off services for industrial and commercial accounts producing qualifying scrap volumes.',
     },
     {
       icon: Clock,
-      title: '24-Hour Dispatch Turnaround',
-      description: 'Need an empty container fast? Call or submit online — our fleet arrives within 24 hours.',
+      title: 'Prompt Scrap Pickup',
+      description: 'Schedule a pickup at your convenience — our team will arrive on time with the right equipment to collect your scrap.',
     },
     {
       icon: ShieldCheck,
-      title: 'NTEP-Certified Scale Tickets',
-      description: 'Transparent net weight tickets issued with each swap, verified on calibrated platform scales.',
+      title: 'Transparent Weight Tracking',
+      description: 'We provide detailed weight documentation for every pickup, ensuring accurate record-keeping and fair payment.',
     },
     {
       icon: Box,
-      title: 'Multiple Heavy-Duty Sizes',
-      description: 'From 10 to 40 yards, reinforced steel containers built to handle heavy ferrous and non-ferrous loads.',
+      title: 'Diverse Scrap Solutions',
+      description: 'Whether you have a small quantity of scrap or a large industrial stockpile, we have the right solution to meet your needs.',
     },
   ];
 
@@ -68,15 +68,11 @@ export const FreeDelivery: React.FC<FreeDeliveryProps> = ({ onGetQuote }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14">
-          <span className="text-sm font-bold text-orange-600 uppercase tracking-wider block mb-2">
-            Commercial Logistics & Bin Dispatch
-          </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-            Free Scrap Container Delivery
+            Free Scrap Pickup and drop-off Services
           </h2>
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-            We deliver heavy-duty roll-off scrap containers directly to your job site, manufacturing plant,
-            or fabrication shop at zero upfront cost for qualifying industrial accounts.
+            We offer free scrap pickup and drop-off services for industrial and commercial accounts producing qualifying scrap volumes.
           </p>
         </div>
 

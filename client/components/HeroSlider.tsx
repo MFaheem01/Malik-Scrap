@@ -17,9 +17,9 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ onLearnMore, onContactUs
       subtitle:
         'Turn your factory cutoffs, surplus inventory, and demolition steel into instant revenue. Certified digital weighbridge weighing, top daily rates, and immediate same-day wire or cash settlement.',
       image: '/assets/images/hero_scrap_facility_1793892530533.jpg',
-      highlightBadge: 'Licensed Metal Scrap Buyers | Top Payouts Paid',
-      buttonPrimaryText: 'Sell Scrap Today',
-      buttonSecondaryText: 'Check Buying Rates',
+      highlightBadge: 'Licensed Scrap Metal Buyers | Top Payouts Paid',
+      buttonPrimaryText: 'Contact Us',
+      buttonSecondaryText: 'View Our Services',
     },
     {
       id: 2,
@@ -28,8 +28,8 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ onLearnMore, onContactUs
         'We deliver 10 to 40-yard heavy-gauge steel scrap dumpsters directly to your workshop, manufacturing plant, or demolition site at zero cost. You load the metal—we collect, weigh, buy, and pay.',
       image: '/assets/images/industrial_scrap_containers_1793892531220.jpg',
       highlightBadge: 'Zero Bin Rental Fees | 24-Hour Container Swap',
-      buttonPrimaryText: 'Order Scrap Bin',
-      buttonSecondaryText: 'View Container Sizes',
+      buttonPrimaryText: 'Contact Us',
+      buttonSecondaryText: 'View Our Services',
     },
     {
       id: 3,
@@ -38,8 +38,8 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ onLearnMore, onContactUs
         'Instant handheld XRF spectrographic grading guarantees maximum certified valuation on Bare Bright wire, Millberry copper, brass fixtures, aluminum extrusions, and stainless steel.',
       image: '/assets/images/copper_wire_brass_1793892530421.jpg',
       highlightBadge: 'Immediate Payment | Handheld XRF Alloy Assay',
-      buttonPrimaryText: 'Get a Scrap Quote',
-      buttonSecondaryText: 'Schedule Drop-Off',
+      buttonPrimaryText: 'Contact Us',
+      buttonSecondaryText: 'View Our Services',
     },
   ];
 
@@ -67,9 +67,8 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ onLearnMore, onContactUs
       {slides.map((slide, idx) => (
         <div
           key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            idx === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-          }`}
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+            }`}
         >
           <img
             src={slide.image}
@@ -145,9 +144,8 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ onLearnMore, onContactUs
             <button
               key={i}
               onClick={() => setCurrentSlide(i)}
-              className={`h-2 rounded-full transition-all cursor-pointer ${
-                i === currentSlide ? 'w-8 bg-orange-500' : 'w-2 bg-white/40 hover:bg-white/70'
-              }`}
+              className={`h-2 rounded-full transition-all cursor-pointer ${i === currentSlide ? 'w-8 bg-orange-500' : 'w-2 bg-white/40 hover:bg-white/70'
+                }`}
               aria-label={`Go to slide ${i + 1}`}
             />
           ))}

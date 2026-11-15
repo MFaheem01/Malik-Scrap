@@ -49,11 +49,11 @@ export const WhyTrustSection: React.FC<WhyTrustSectionProps> = ({ onGetSupport, 
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white mb-1.5 group-hover:text-orange-400 transition-colors">
-                    Certified Fair Scale Payouts
+                    Certified Fair Pricing
                   </h3>
                   <p className="text-sm text-slate-300 leading-relaxed max-w-md font-normal">
-                    NTEP-calibrated digital truck scales and instant handheld XRF spectrometer assays
-                    ensure every pound of scrap is graded accurately with zero hidden deductions.
+                    NTEP calibrated digital truck scales and instant handheld XRF spectrometer assays ensure
+                    every metal is weighed and graded accurately with zero hidden deductions.
                   </p>
                 </div>
               </div>
@@ -64,7 +64,7 @@ export const WhyTrustSection: React.FC<WhyTrustSectionProps> = ({ onGetSupport, 
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white mb-1.5 group-hover:text-orange-400 transition-colors">
-                    Fast 24-Hour Container Dispatch
+                    Fast 24-Hour Pickup Service
                   </h3>
                   <p className="text-sm text-slate-300 leading-relaxed max-w-md font-normal">
                     Dedicated roll-off fleet offering 10 to 40-yard scrap dumpsters with prompt same-day
@@ -79,11 +79,11 @@ export const WhyTrustSection: React.FC<WhyTrustSectionProps> = ({ onGetSupport, 
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white mb-1.5 group-hover:text-orange-400 transition-colors">
-                    Dedicated Account & EPA Compliance
+                    Dedicated Support & Compliance
                   </h3>
                   <p className="text-sm text-slate-300 leading-relaxed max-w-md font-normal">
-                    Direct access to experienced commercial account managers who handle manifest documentation,
-                    material destruction certificates, and comprehensive environmental compliance.
+                    Direct access to experienced commercial account managers who handle documentation,
+                    material certificates, and full environmental compliance.
                   </p>
                 </div>
               </div>
@@ -116,7 +116,7 @@ export const WhyTrustSection: React.FC<WhyTrustSectionProps> = ({ onGetSupport, 
               onClick={onGetSupport}
               className="bg-[#0b1329] hover:bg-slate-900 active:bg-black text-white font-bold text-xs uppercase tracking-wider px-7 py-3.5 rounded shadow-lg transition-all flex items-center gap-2 cursor-pointer group"
             >
-              <span>GET SUPPORT</span>
+              <span>Get in touch</span>
               <span className="font-extrabold text-orange-400 group-hover:translate-x-1 transition-transform">
                 »
               </span>

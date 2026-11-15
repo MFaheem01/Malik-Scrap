@@ -1,16 +1,24 @@
 'use client';
 
-import React, { useState } from 'react';
-import { ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import {
+  ArrowRight,
+  CheckCircle2,
+  AlertCircle,
+  ShieldCheck,
+  Scale,
+  Truck,
+  Coins,
+  Zap,
+} from 'lucide-react';
 import { submitConsultation } from '../lib/api';
 
 interface AboutSectionProps {
-  onLearnMoreServices: () => void;
+  onLearnMoreServices?: () => void;
 }
 
 export const AboutSection: React.FC<AboutSectionProps> = ({ onLearnMoreServices }) => {
-  const [activeTab, setActiveTab] = useState<'history' | 'mission' | 'support'>('history');
-
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -20,12 +28,23 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onLearnMoreServices 
   const [submitted, setSubmitted] = useState(false);
   const [formError, setFormError] = useState('');
 
+  // Check URL query parameter or hash on mount to pre-fill subject if navigated from services
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const querySubject = params.get('product') || params.get('service') || params.get('subject');
+      if (querySubject) {
+        setSubject(`Sell Scrap: ${querySubject}`);
+      }
+    }
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError('');
 
-    if (!name.trim() || !email.trim()) {
-      setFormError('Please provide your name and email address.');
+    if (!name.trim() || !phone.trim()) {
+      setFormError('Please provide your name and phone number.');
       return;
     }
 
@@ -33,10 +52,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onLearnMoreServices 
     try {
       await submitConsultation({
         name: name.trim(),
-        email: email.trim(),
+        email: email.trim() || 'purchase@malikscrap.com',
         phone: phone.trim(),
         subject: subject.trim(),
-        message: message.trim(),
+        message: message.trim() || 'Inquiry submitted from homepage contact form.',
       });
       setSubmitted(true);
       setName('');
@@ -44,116 +63,108 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onLearnMoreServices 
       setPhone('');
       setMessage('');
     } catch {
-      setFormError('Failed to submit consultation. Please try again or call dispatch.');
+      setFormError('Failed to submit consultation. Please try again or call our dispatch hotline.');
     } finally {
       setSubmitting(false);
     }
   };
 
+  const keyStrengths = [
+    {
+      icon: <Coins className="w-5 h-5 text-orange-600 shrink-0" />,
+      title: 'Top Market Cash Payouts',
+      description: 'Indexed to daily LME/COMEX rates with zero middleman deductions and same-day payment.',
+    },
+    {
+      icon: <Zap className="w-5 h-5 text-orange-600 shrink-0" />,
+      title: 'XRF Spectrometer Assay',
+      description: 'Instant handheld elemental grading verifying purity down to 0.01% on-site.',
+    },
+    {
+      icon: <Truck className="w-5 h-5 text-orange-600 shrink-0" />,
+      title: 'Free Scrap Bin Placement',
+      description: '10 to 40-yard roll-off containers delivered with guaranteed 24-hour container swaps.',
+    },
+    {
+      icon: <Scale className="w-5 h-5 text-orange-600 shrink-0" />,
+      title: '100-Ton Weighbridge',
+      description: 'Certified digital electronic truck scales with printed receipts and honest tare weights.',
+    },
+  ];
+
   return (
     <section id="about" className="py-20 lg:py-24 bg-white relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-600 via-orange-400 to-slate-900" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
-          <div className="lg:col-span-7 flex flex-col justify-center">
-            <div className="flex items-center gap-2 mb-8">
-              {(['history', 'mission', 'support'] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-6 py-2.5 text-sm font-semibold rounded capitalize transition-colors cursor-pointer ${activeTab === tab
-                      ? 'bg-orange-600 text-white shadow-sm'
-                      : 'bg-[#0b1329] text-white hover:bg-slate-800'
-                    }`}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-start">
+          {/* Left Column: Solid Unified Company Overview (replaces tab sliders) */}
+          <div className="lg:col-span-7 flex flex-col justify-center space-y-6">
+
+
+            <div className="space-y-3">
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                UAE Leading Industrial &amp; Commercial Scrap Metal Buyers
+              </h2>
+              <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
+                For over four decades, Malik Scrap Metal Buyers has been the trusted asset recovery partner for
+                machine shops, fabrication yards, construction contractors, and manufacturing plants across Dubai and the UAE.
+                We purchase surplus steel, production cutoffs, copper wire, brass valves, aluminum extrusions, and heavy plant machinery
+                with transparent certified weighbridge tickets and instant cash or bank wire settlement.
+              </p>
+            </div>
+
+            {/* Single Solid Well-Designed Feature Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+              {keyStrengths.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="p-4 rounded-xl border border-slate-200/90 bg-slate-50/60 hover:bg-orange-50/40 hover:border-orange-300 transition-all flex items-start gap-3 shadow-2xs"
                 >
-                  {tab === 'history' ? 'Our Background' : tab === 'mission' ? 'Why Sell To Us' : 'Pickup & Logistics'}
-                </button>
+                  <div className="p-2 rounded-lg bg-white border border-slate-200/80 shadow-2xs">
+                    {item.icon}
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-900 mb-0.5">{item.title}</h4>
+                    <p className="text-[11px] text-slate-500 leading-relaxed">{item.description}</p>
+                  </div>
+                </div>
               ))}
             </div>
 
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-6">
-              Trusted Scrap Metal Buyers Since 1984
-            </h2>
-
-            <div className="space-y-4 text-slate-600 leading-relaxed text-base min-h-[190px]">
-              {activeTab === 'history' && (
-                <>
-                  <p>
-                    Established over four decades ago, Malik Scrap Metal Buyers has grown into one of the region's
-                    largest licensed industrial scrap purchasing operations. We purchase surplus steel, production
-                    offcuts, copper cables, brass components, and machinery from manufacturers, fabricators, and demolition
-                    contractors.
-                  </p>
-                  <p>
-                    With honest digital weighbridge weighing, rapid roll-off bin placement, and instant settlement,
-                    we buy over 150,000 metric tons of ferrous and non-ferrous scrap annually with direct mill pricing.
-                  </p>
-                </>
-              )}
-
-              {activeTab === 'mission' && (
-                <>
-                  <p>
-                    Our purchasing model is built on transparency: zero hidden deductions, calibrated certified truck
-                    scales, and handheld XRF alloy testing so you get paid the exact market value for every kilogram of
-                    metal.
-                  </p>
-                  <p>
-                    Whether you have 500 kg of copper tubing or 500 tons of demolition I-beams, we provide instant
-                    settlement via certified bank transfer, company check, or cash on delivery.
-                  </p>
-                </>
-              )}
-
-              {activeTab === 'support' && (
-                <>
-                  <p>
-                    We provide machine shops, CNC plants, fabrication yards, and construction sites with complimentary
-                    heavy-duty roll-off scrap dumpsters. When your container is ready, our dispatch team swaps it within
-                    24 hours.
-                  </p>
-                  <p>
-                    For larger plant clearing or structural dismantling, our licensed heavy rigging and torch-cutting
-                    teams handle full on-site loading and transport, leaving your yard clean and compliant.
-                  </p>
-                </>
-              )}
-            </div>
-
-            <div className="grid grid-cols-3 gap-4 py-6 border-y border-slate-100 my-6">
+            {/* Stats Row */}
+            <div className="grid grid-cols-3 gap-4 py-5 border-y border-slate-100 my-2">
               <div className="flex flex-col">
-                <span className="text-2xl font-bold text-orange-600 tabular-nums">5+</span>
-                <span className="text-xs text-slate-500 font-medium">Years Buying Scrap</span>
+                <span className="text-2xl sm:text-3xl font-extrabold text-orange-600 tabular-nums">40+</span>
+                <span className="text-[11px] sm:text-xs text-slate-500 font-medium">Years in Business</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-bold text-slate-900 tabular-nums">150K+</span>
-                <span className="text-xs text-slate-500 font-medium">Tons Bought Annually</span>
+                <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">150K+</span>
+                <span className="text-[11px] sm:text-xs text-slate-500 font-medium">Scrap Metals Bought</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-bold text-slate-900 tabular-nums">100%</span>
-                <span className="text-xs text-slate-500 font-medium">Certified Digital Scales</span>
+                <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums">100%</span>
+                <span className="text-[11px] sm:text-xs text-slate-500 font-medium">Guaranteed Payouts</span>
               </div>
             </div>
 
             <div>
-              <button
-                onClick={onLearnMoreServices}
-                className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white font-semibold text-sm px-6 py-3 rounded shadow-md shadow-orange-600/20 transition-all cursor-pointer group"
+              <Link
+                href="/services"
+                className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white font-semibold text-xs sm:text-sm px-6 py-3 rounded-lg shadow-md shadow-orange-600/20 transition-all cursor-pointer group"
               >
-                <span>View All Metals We Buy</span>
+                <span>View All Metals We Purchase</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
+              </Link>
             </div>
           </div>
 
-          <div className="lg:col-span-5">
-            <div className="bg-[#0b1329] rounded-lg shadow-2xl overflow-hidden border border-slate-800 relative">
-              <div className="bg-orange-600 py-3.5 px-6 text-center relative">
+          {/* Right Column: Contact / Quote Form */}
+          <div id="contact-form" className="lg:col-span-5 scroll-mt-28">
+            <div className="bg-[#0b1329] rounded-2xl shadow-2xl overflow-hidden border border-slate-800 relative">
+              <div className="bg-orange-600 py-4 px-6 text-center relative">
                 <h3 className="text-white text-lg sm:text-xl font-bold tracking-tight">
-                  Sell Your Scrap — Instant Quote
+                  Contact Us for Pickup
                 </h3>
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-x-8 border-x-transparent border-t-8 border-t-orange-600" />
               </div>
 
               <div className="p-6 sm:p-8 pt-7">
@@ -163,93 +174,101 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onLearnMoreServices 
                       <CheckCircle2 className="w-8 h-8" />
                     </div>
                     <h4 className="text-xl font-bold text-white">Scrap Offer Received!</h4>
-                    <p className="text-slate-300 text-sm max-w-sm mx-auto leading-relaxed">
+                    <p className="text-slate-300 text-xs sm:text-sm max-w-sm mx-auto leading-relaxed">
                       Thank you. Our scrap appraisal and logistics team will evaluate your material and contact you promptly with top pricing and pickup arrangements.
                     </p>
                     <button
                       onClick={() => setSubmitted(false)}
-                      className="mt-4 px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold rounded cursor-pointer transition-colors"
+                      className="mt-4 px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold rounded-lg cursor-pointer transition-colors"
                     >
-                      Submit Another Scrap Inquiry
+                      Send another message
                     </button>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
                     {formError && (
-                      <div className="p-3 bg-red-950/80 border border-red-800 text-red-200 text-xs rounded flex items-center gap-2">
+                      <div className="p-3 bg-red-950/80 border border-red-800 text-red-200 text-xs rounded-lg flex items-center gap-2">
                         <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
                         <span>{formError}</span>
                       </div>
                     )}
 
-                    <div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-slate-300">
+                        Your Full Name <span className="text-orange-500">*</span>
+                      </label>
                       <input
                         type="text"
-                        placeholder="Your Name / Company Name"
+                        placeholder="Enter Your Name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
-                        className="w-full bg-[#070d1e] text-slate-100 placeholder:text-slate-500 text-sm px-4 py-3 rounded border border-slate-800 focus:outline-none focus:border-orange-500 transition-colors"
+                        className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
                       />
                     </div>
 
-                    <div>
-                      <input
-                        type="email"
-                        placeholder="Email Address"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className="w-full bg-[#070d1e] text-slate-100 placeholder:text-slate-500 text-sm px-4 py-3 rounded border border-slate-800 focus:outline-none focus:border-orange-500 transition-colors"
-                      />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                      <div className="space-y-1">
+                        <label className="text-xs font-semibold text-slate-300">
+                          Phone / WhatsApp <span className="text-orange-500">*</span>
+                        </label>
+                        <input
+                          type="tel"
+                          placeholder="Enter Your Phone Number"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          required
+                          className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-semibold text-slate-300">Email</label>
+                        <input
+                          type="email"
+                          placeholder="Enter Your Email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
+                        />
+                      </div>
                     </div>
 
-                    <div>
-                      <input
-                        type="tel"
-                        placeholder="Phone / WhatsApp Number"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="w-full bg-[#070d1e] text-slate-100 placeholder:text-slate-500 text-sm px-4 py-3 rounded border border-slate-800 focus:outline-none focus:border-orange-500 transition-colors"
-                      />
-                    </div>
-
-                    <div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-slate-300">Material Category</label>
                       <input
                         type="text"
-                        placeholder="Scrap Type (e.g. Copper Wire, Steel Beams, Brass, Demolition)"
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
-                        className="w-full bg-[#070d1e] text-slate-100 placeholder:text-slate-500 text-sm px-4 py-3 rounded border border-slate-800 focus:outline-none focus:border-orange-500 transition-colors"
+                        className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
                       />
                     </div>
 
-                    <div>
+                    <div className="space-y-1">
+                      <label className="text-xs font-semibold text-slate-300">Details &amp; Quantity</label>
                       <textarea
                         rows={3}
-                        placeholder="Estimated Quantity (kg/tons), Location & Pickup Requirements"
+                        placeholder="Enter Material Details & Quantity"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
-                        className="w-full bg-[#070d1e] text-slate-100 placeholder:text-slate-500 text-sm px-4 py-3 rounded border border-slate-800 focus:outline-none focus:border-orange-500 transition-colors resize-none"
+                        className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-orange-500"
                       />
                     </div>
 
-                    <div>
-                      <button
-                        type="submit"
-                        disabled={submitting}
-                        className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white font-semibold text-sm px-8 py-3 rounded transition-all shadow-md shadow-orange-600/30 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                      >
-                        {submitting ? (
-                          <span>Calculating Quote...</span>
-                        ) : (
-                          <>
-                            <span>Request Scrap Purchase Quote</span>
-                            <ArrowRight className="w-4 h-4" />
-                          </>
-                        )}
-                      </button>
-                    </div>
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="w-full bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white font-bold text-xs sm:text-sm py-3 px-4 rounded-lg shadow-lg shadow-orange-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    >
+                      {submitting ? (
+                        <span>Sending Scrap Inquiry...</span>
+                      ) : (
+                        <>
+                          <span>Submit message</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </>
+                      )}
+                    </button>
                   </form>
                 )}
               </div>

@@ -1,7 +1,7 @@
 import { MongoClient, Db } from 'mongodb';
 
 const uri = process.env.MONGODB_URI;
-const dbName = process.env.MONGODB_DB || 'malik_scrap_db';
+const dbName = process.env.MONGODB_DB;
 
 let client: MongoClient | null = null;
 let clientPromise: Promise<MongoClient> | null = null;

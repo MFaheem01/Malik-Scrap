@@ -1,7 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Factory, Phone, MapPin, ExternalLink, ShieldCheck, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Phone, MapPin, ExternalLink, ShieldCheck, ArrowRight, Mail } from 'lucide-react';
 import { ContactInfo } from '../types';
 
 interface FooterProps {
@@ -18,41 +20,50 @@ export const Footer: React.FC<FooterProps> = ({ contact, onRequestQuote }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-9 gap-10 lg:gap-8">
           {/* Brand & Mission (4 cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-orange-600 flex items-center justify-center text-white shadow-md shadow-orange-600/20">
-                <Factory className="w-6 h-6" />
+            <Link href="/" className="inline-block focus:outline-none">
+              <div className="relative h-12 w-auto min-w-[130px] max-w-[210px] flex items-center bg-white/5 p-1.5 rounded-lg border border-white/10">
+                <Image
+                  src="/assets/images/Malik-scrap-logo.png"
+                  alt="Malik Scrap Metal Buyers"
+                  width={200}
+                  height={55}
+                  className="h-10 w-auto object-contain"
+                />
               </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-white tracking-tight flex items-center">
-                  <span className="text-orange-500">Malik</span>
-                  <span className="ml-1 text-white">Scrap Buyers</span>
-                </span>
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 -mt-1">
-                  Industrial Scrap Metal Purchasing
-                </span>
-              </div>
-            </div>
+            </Link>
 
             <p className="text-xs text-slate-400 leading-relaxed font-normal">
               Premier industrial scrap metal buyers. We purchase ferrous and non-ferrous scrap, certified weighbridge
               grading, commercial roll-off scrap container dispatch, and plant demolition salvage. Delivering top payouts
-              and honest weights since 1984.
+              and honest weights with fast digital settlement.
             </p>
 
-            <div className="pt-2">
-              <span className="text-xs font-semibold text-white block mb-1">
-                Scrap Purchasing & Dispatch Hotline:
-              </span>
-              <a
-                href={`tel:${contact.dispatchPhone.replace(/[^0-9+]/g, '')}`}
-                className="text-base font-bold text-orange-500 hover:text-orange-400 transition-colors flex items-center gap-1.5"
-              >
-                <Phone className="w-4 h-4" />
-                <span>{contact.dispatchPhone}</span>
-              </a>
-              <span className="text-[11px] text-slate-500 block mt-0.5">
-                {contact.emergencyHotline}
-              </span>
+            <div className="pt-2 space-y-2">
+              <div>
+                <span className="text-xs font-semibold text-white block mb-0.5">
+                  Scrap Purchasing & Dispatch Hotline:
+                </span>
+                <a
+                  href={`tel:${contact.dispatchPhone.replace(/[^0-9+]/g, '')}`}
+                  className="text-base font-bold text-orange-500 hover:text-orange-400 transition-colors flex items-center gap-1.5"
+                >
+                  <Phone className="w-4 h-4" />
+                  <span>{contact.dispatchPhone}</span>
+                </a>
+                <span className="text-[11px] text-slate-400 block mt-0.5">
+                  {contact.emergencyHotline}
+                </span>
+              </div>
+
+              <div>
+                <a
+                  href={`mailto:${contact.email}`}
+                  className="text-xs text-slate-400 hover:text-orange-400 transition-colors flex items-center gap-1.5"
+                >
+                  <Mail className="w-3.5 h-3.5 text-orange-500" />
+                  <span>{contact.email}</span>
+                </a>
+              </div>
             </div>
 
             {/* Location & Map Link */}
@@ -63,9 +74,9 @@ export const Footer: React.FC<FooterProps> = ({ contact, onRequestQuote }) => {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs text-orange-400 hover:text-orange-300 font-medium transition-colors"
               >
-                <MapPin className="w-3.5 h-3.5" />
+                <MapPin className="w-3.5 h-3.5 shrink-0" />
                 <span>{contact.address}, {contact.city}</span>
-                <ExternalLink className="w-3 h-3 opacity-70" />
+                <ExternalLink className="w-3 h-3 opacity-70 shrink-0" />
               </a>
             </div>
           </div>
@@ -77,40 +88,34 @@ export const Footer: React.FC<FooterProps> = ({ contact, onRequestQuote }) => {
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <a href="#home" className="hover:text-orange-400 transition-colors">
+                <Link href="/" className="hover:text-orange-400 transition-colors">
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#about" className="hover:text-orange-400 transition-colors">
+                <Link href="/#about" className="hover:text-orange-400 transition-colors">
                   About Our Company
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#services" className="hover:text-orange-400 transition-colors">
-                  Scrap We Buy
-                </a>
+                <Link href="/services" className="hover:text-orange-400 transition-colors text-orange-400 font-medium">
+                  Scrap We Buy (All Services)
+                </Link>
               </li>
               <li>
-                <a href="#delivery" className="hover:text-orange-400 transition-colors">
+                <Link href="/#delivery" className="hover:text-orange-400 transition-colors">
                   Free Scrap Containers
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#blog" className="hover:text-orange-400 transition-colors">
-                  Scrap Selling Guides
-                </a>
+                <Link href="/blog" className="hover:text-orange-400 transition-colors text-orange-400 font-medium">
+                  Scrap Selling Blog & Guides
+                </Link>
               </li>
               <li>
-                <a href="#location" className="hover:text-orange-400 transition-colors flex items-center gap-1 text-orange-400 font-medium">
-                  <span>Yard Location & Map</span>
-                  <ExternalLink className="w-3 h-3" />
-                </a>
-              </li>
-              <li>
-                <a href="/admin" className="text-slate-500 hover:text-orange-400 transition-colors">
-                  Admin Portal Login
-                </a>
+                <Link href="/#location" className="hover:text-orange-400 transition-colors flex items-center gap-1">
+                  <span>Location & Map</span>
+                </Link>
               </li>
             </ul>
           </div>
@@ -136,9 +141,9 @@ export const Footer: React.FC<FooterProps> = ({ contact, onRequestQuote }) => {
             <div className="pt-4">
               <button
                 onClick={onRequestQuote}
-                className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold text-xs py-2.5 px-4 rounded transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold text-xs py-2.5 px-4 rounded transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
               >
-                <span>Request Free Scrap Valuation</span>
+                <span>Sell Your Scrap</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -156,9 +161,9 @@ export const Footer: React.FC<FooterProps> = ({ contact, onRequestQuote }) => {
               <ShieldCheck className="w-3.5 h-3.5 text-orange-500" />
               <span>EPA & Municipal Licensed</span>
             </span>
-            <a href="/admin" className="hover:text-slate-300 transition-colors">
+            <Link href="/admin" className="hover:text-slate-300 transition-colors">
               Staff Admin Portal
-            </a>
+            </Link>
           </div>
         </div>
       </div>

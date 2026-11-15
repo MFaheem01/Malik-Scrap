@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
 import {
   Shield,
   Layers,
@@ -26,6 +28,8 @@ import {
   Check,
   RefreshCw,
   Navigation,
+  Menu,
+  Clock,
 } from 'lucide-react';
 import { Button } from '../../../client/components/ui/button';
 import { Input } from '../../../client/components/ui/input';
@@ -33,6 +37,13 @@ import { Textarea } from '../../../client/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../client/components/ui/card';
 import { Badge } from '../../../client/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../client/components/ui/table';
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '../../../client/components/ui/sheet';
 import {
   fetchContactInfo,
   updateContactInfo,
@@ -57,6 +68,7 @@ export default function AdminDashboardPage() {
   const router = useRouter();
 
   const [activeTab, setActiveTab] = useState<'overview' | 'services' | 'prices' | 'blogs' | 'media' | 'contact' | 'leads' | 'security'>('overview');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const [contact, setContact] = useState<ContactInfo | null>(null);
@@ -65,6 +77,33 @@ export default function AdminDashboardPage() {
   const [prices, setPrices] = useState<ScrapPrice[]>([]);
   const [consultations, setConsultations] = useState<ConsultationLead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Auto logout on 15 minutes of inactivity as requested
+  useEffect(() => {
+    const INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000;
+    let timer: NodeJS.Timeout;
+
+    const performLogout = () => {
+      localStorage.removeItem('malik_admin_token');
+      localStorage.removeItem('Malik_admin_token');
+      localStorage.removeItem('malik_admin_user');
+      router.push('/admin?timeout=true');
+    };
+
+    const resetTimer = () => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(performLogout, INACTIVITY_TIMEOUT_MS);
+    };
+
+    const events = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart', 'click'];
+    events.forEach((ev) => window.addEventListener(ev, resetTimer, { passive: true }));
+    resetTimer();
+
+    return () => {
+      if (timer) clearTimeout(timer);
+      events.forEach((ev) => window.removeEventListener(ev, resetTimer));
+    };
+  }, [router]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -366,29 +405,179 @@ export default function AdminDashboardPage() {
     );
   }
 
+  const renderNavButtons = (onSelect?: () => void) => (
+    <div className="space-y-1.5">
+      <div className="px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+        Navigation Menu
+      </div>
+
+      <button
+        onClick={() => {
+          setActiveTab('overview');
+          onSelect?.();
+        }}
+        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'overview' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
+          }`}
+      >
+        <Layers className="w-4 h-4" />
+        <span>Dashboard Overview</span>
+      </button>
+
+      <button
+        onClick={() => {
+          setActiveTab('services');
+          onSelect?.();
+        }}
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'services' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
+          }`}
+      >
+        <div className="flex items-center gap-3">
+          <Layers className="w-4 h-4" />
+          <span>Scrap We Buy</span>
+        </div>
+        <Badge variant={activeTab === 'services' ? 'secondary' : 'outline'}>{services.length}</Badge>
+      </button>
+
+      <button
+        onClick={() => {
+          setActiveTab('prices');
+          onSelect?.();
+        }}
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'prices' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
+          }`}
+      >
+        <div className="flex items-center gap-3">
+          <Coins className="w-4 h-4" />
+          <span>Buying Rates</span>
+        </div>
+        <Badge variant="orange">{pricesList.length}</Badge>
+      </button>
+
+      <button
+        onClick={() => {
+          setActiveTab('media');
+          onSelect?.();
+        }}
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'media' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
+          }`}
+      >
+        <div className="flex items-center gap-3">
+          <Upload className="w-4 h-4" />
+          <span>UploadThing Media</span>
+        </div>
+        <Badge variant="secondary">CDN</Badge>
+      </button>
+
+      <button
+        onClick={() => {
+          setActiveTab('blogs');
+          onSelect?.();
+        }}
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'blogs' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
+          }`}
+      >
+        <div className="flex items-center gap-3">
+          <BookOpen className="w-4 h-4" />
+          <span>Scrap Selling Guides</span>
+        </div>
+        <Badge variant={activeTab === 'blogs' ? 'secondary' : 'outline'}>{blogs.length}</Badge>
+      </button>
+
+      <button
+        onClick={() => {
+          setActiveTab('contact');
+          onSelect?.();
+        }}
+        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'contact' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
+          }`}
+      >
+        <MapPin className="w-4 h-4" />
+        <span>Yard Map & Contact</span>
+      </button>
+
+      <button
+        onClick={() => {
+          setActiveTab('leads');
+          onSelect?.();
+        }}
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'leads' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
+          }`}
+      >
+        <div className="flex items-center gap-3">
+          <Inbox className="w-4 h-4" />
+          <span>Scrap Offers & Leads</span>
+        </div>
+        <Badge variant="orange">{consultations.length}</Badge>
+      </button>
+
+      <div className="pt-4 border-t border-slate-100 mt-4">
+        <button
+          onClick={() => {
+            setActiveTab('security');
+            onSelect?.();
+          }}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'security' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
+            }`}
+        >
+          <KeyRound className="w-4 h-4" />
+          <span>Admin Credentials</span>
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-100 font-sans">
       {/* Top Header */}
-      <header className="bg-slate-950 text-white border-b border-slate-800 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+      <header className="bg-slate-950 text-white border-b border-slate-800 px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-orange-600 flex items-center justify-center text-white shadow-md shadow-orange-600/30">
-            <Shield className="w-6 h-6" />
-          </div>
+          {/* Mobile hamburger menu button opening Shadcn Sheet sidebar */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <button
+                type="button"
+                className="p-2 text-slate-300 hover:text-white rounded-md bg-slate-900 border border-slate-800 md:hidden cursor-pointer"
+                aria-label="Open mobile admin menu"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-72 p-4 bg-white dark:bg-slate-900 overflow-y-auto">
+              <SheetHeader className="mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
+                <SheetTitle className="text-sm font-bold flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-orange-600" />
+                  <span>Admin Menu</span>
+                </SheetTitle>
+              </SheetHeader>
+              {renderNavButtons(() => setMobileMenuOpen(false))}
+            </SheetContent>
+          </Sheet>
+
+          <Link href="/" className="inline-block">
+            <Image
+              src="/assets/images/Malik-scrap-logo.png"
+              alt="Malik Scrap Metal Buyers"
+              width={140}
+              height={36}
+              className="h-8 sm:h-9 w-auto object-contain hidden sm:block"
+            />
+          </Link>
+
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg font-bold">Malik Scrap Metal Buyers</h1>
+              <h1 className="text-base sm:text-lg font-bold">Malik Scrap Admin</h1>
               <span className="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 MongoDB Atlas Active
               </span>
             </div>
-            <p className="text-xs text-slate-400">
-              Admin Portal: Manage Scrap Purchasing Services, Buying Rates, Location & Inquiries
+            <p className="text-[11px] sm:text-xs text-slate-400 line-clamp-1">
+              Admin Portal: Manage Services, Rates, Location & Leads
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={() => loadAllData()}
             title="Refresh database records"
@@ -398,22 +587,22 @@ export default function AdminDashboardPage() {
             <span className="hidden sm:inline">Refresh Data</span>
           </button>
 
-          <a
+          <Link
             href="/"
             target="_blank"
             rel="noopener noreferrer"
             title="View customer-facing website in new tab"
-            className="flex items-center gap-1.5 text-xs font-semibold text-orange-400 hover:text-orange-300 bg-orange-950/60 border border-orange-800/80 px-3.5 py-2 rounded transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-orange-400 hover:text-orange-300 bg-orange-950/60 border border-orange-800/80 px-3 py-2 rounded transition-colors"
           >
-            <span>View Live Website</span>
+            <span className="hidden sm:inline">View Website</span>
             <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+          </Link>
 
           <Button
             variant="destructive"
             size="sm"
             onClick={handleLogout}
-            className="flex items-center gap-1.5 text-xs cursor-pointer"
+            className="flex items-center gap-1.5 text-xs cursor-pointer px-3 py-2"
             title="Securely sign out of administrative session"
           >
             <LogOut className="w-3.5 h-3.5" />
@@ -437,108 +626,9 @@ export default function AdminDashboardPage() {
 
       {/* Main Layout: Sidebar & Content */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-        {/* Sidebar Nav with descriptive icons & badges */}
-        <aside className="w-full md:w-64 bg-white border-r border-slate-200 p-4 space-y-1.5 shrink-0">
-          <div className="px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Navigation Menu
-          </div>
-
-          <button
-            onClick={() => setActiveTab('overview')}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-              activeTab === 'overview' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-            }`}
-          >
-            <Layers className="w-4 h-4" />
-            <span>Dashboard Overview</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('services')}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-              activeTab === 'services' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <Layers className="w-4 h-4" />
-              <span>Scrap We Buy</span>
-            </div>
-            <Badge variant={activeTab === 'services' ? 'secondary' : 'outline'}>{services.length}</Badge>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('prices')}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-              activeTab === 'prices' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <Coins className="w-4 h-4" />
-              <span>Buying Rates</span>
-            </div>
-            <Badge variant="orange">{pricesList.length}</Badge>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('media')}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-              activeTab === 'media' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <Upload className="w-4 h-4" />
-              <span>UploadThing Media</span>
-            </div>
-            <Badge variant="secondary">CDN</Badge>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('blogs')}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-              activeTab === 'blogs' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <BookOpen className="w-4 h-4" />
-              <span>Scrap Selling Guides</span>
-            </div>
-            <Badge variant={activeTab === 'blogs' ? 'secondary' : 'outline'}>{blogs.length}</Badge>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('contact')}
-            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-              activeTab === 'contact' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-            }`}
-          >
-            <MapPin className="w-4 h-4" />
-            <span>Yard Map & Contact</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('leads')}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-              activeTab === 'leads' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <Inbox className="w-4 h-4" />
-              <span>Scrap Offers & Leads</span>
-            </div>
-            <Badge variant="orange">{consultations.length}</Badge>
-          </button>
-
-          <div className="pt-4 border-t border-slate-100 mt-4">
-            <button
-              onClick={() => setActiveTab('security')}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-                activeTab === 'security' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-              }`}
-            >
-              <KeyRound className="w-4 h-4" />
-              <span>Admin Credentials</span>
-            </button>
-          </div>
+        {/* Desktop Sidebar Nav */}
+        <aside className="hidden md:block w-64 bg-white border-r border-slate-200 p-4 space-y-1.5 shrink-0 overflow-y-auto">
+          {renderNavButtons()}
         </aside>
 
         {/* Content View */}
@@ -1354,11 +1444,11 @@ export default function AdminDashboardPage() {
             </div>
           )}
 
-          {/* TAB 6: CONTACT & YARD LOCATION (WITH LIVE MAP PREVIEW) */}
+          {/* TAB 6: CONTACT & Location (WITH LIVE MAP PREVIEW) */}
           {activeTab === 'contact' && (
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold text-slate-900">Yard Location, Dispatch Hotlines & Live Map Preview</h2>
+                <h2 className="text-xl font-bold text-slate-900">Location, Dispatch Hotlines & Live Map Preview</h2>
                 <p className="text-xs text-slate-500">
                   Manage the receiving yard address, phone numbers, and verify the interactive Google Map preview in real-time
                 </p>
@@ -1600,8 +1690,8 @@ export default function AdminDashboardPage() {
                                 lead.status === 'Completed'
                                   ? 'secondary'
                                   : lead.status === 'Scheduled'
-                                  ? 'orange'
-                                  : 'destructive'
+                                    ? 'orange'
+                                    : 'destructive'
                               }
                             >
                               {lead.status}

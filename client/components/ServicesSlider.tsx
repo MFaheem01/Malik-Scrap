@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import {
   Hammer,
   Zap,
@@ -113,35 +114,13 @@ export const ServicesSlider: React.FC<ServicesSliderProps> = ({
           </div>
 
           <div className="lg:max-w-xl">
-            <p className="text-sm text-slate-600 leading-relaxed mb-3">
-              We buy all categories of ferrous and non-ferrous metal scrap directly from manufacturing plants,
-              machine shops, demolition contractors, and fabricators with certified weighing and instant payouts.
-            </p>
             <div className="flex items-center justify-between sm:justify-start gap-6">
-              <button
-                onClick={() => onRequestService('All Scrap Purchasing Inquiry')}
-                className="text-sm font-semibold text-orange-600 hover:text-orange-700 flex items-center gap-1.5 transition-colors cursor-pointer"
+              <Link
+                href="/services"
+                className="text-sm font-semibold text-orange-600 hover:text-orange-700 flex items-center gap-1.5 transition-colors cursor-pointer group"
               >
-                <span>Request Custom Scrap Valuation</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-
-              <div className="flex items-center gap-2 text-xs text-slate-400 bg-white px-3 py-1.5 rounded-full border border-slate-200">
-                <button
-                  onClick={() => setIsPaused(!isPaused)}
-                  className="flex items-center gap-1 text-slate-600 hover:text-orange-600 cursor-pointer"
-                  title={isPaused ? 'Resume auto-slider' : 'Pause auto-slider'}
-                >
-                  {isPaused ? <Play className="w-3 h-3" /> : <Pause className="w-3 h-3" />}
-                  <span>{isPaused ? 'Paused' : 'Auto 3s'}</span>
-                </button>
-                <div className="w-12 h-1 bg-slate-100 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-orange-500 transition-all duration-75"
-                    style={{ width: `${isPaused ? 0 : progress}%` }}
-                  />
-                </div>
-              </div>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </div>
           </div>
         </div>
@@ -227,12 +206,22 @@ export const ServicesSlider: React.FC<ServicesSliderProps> = ({
                   setProgress(0);
                   setStartIndex(i);
                 }}
-                className={`h-2 rounded-full transition-all cursor-pointer ${
-                  i === startIndex ? 'w-8 bg-orange-600' : 'w-2 bg-slate-300 hover:bg-slate-400'
-                }`}
+                className={`h-2 rounded-full transition-all cursor-pointer ${i === startIndex ? 'w-8 bg-orange-600' : 'w-2 bg-slate-300 hover:bg-slate-400'
+                  }`}
                 aria-label={`Go to slide ${i + 1}`}
               />
             ))}
+          </div>
+
+          {/* View All Services Link */}
+          <div className="mt-12 text-center">
+            <Link
+              href="/services"
+              className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white font-semibold text-sm px-7 py-3.5 rounded-lg shadow-md shadow-orange-600/25 transition-all group"
+            >
+              <span>View All Services</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
         </div>
       </div>

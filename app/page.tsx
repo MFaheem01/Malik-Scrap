@@ -11,42 +11,23 @@ import { BlogSection } from '@/client/components/BlogSection';
 import { LocationSection } from '@/client/components/LocationSection';
 import { FreeDelivery } from '@/client/components/FreeDelivery';
 import { Footer } from '@/client/components/Footer';
+import { WhatsAppButton } from '@/client/components/WhatsAppButton';
 import {
   fetchContactInfo,
   fetchServices,
   fetchBlogs,
 } from '@/client/lib/api';
+import {
+  defaultContact,
+  fallbackServices,
+  fallbackBlogs,
+} from '@/client/lib/fallbackData';
 import { ServiceItem, BlogPost, ContactInfo } from '@/client/types';
-
-const defaultContact: ContactInfo = {
-  companyName: 'Malik Scrap Metal Buyers',
-  tagline: 'We Buy Industrial & Commercial Scrap Metal at Top Market Rates',
-  phone: '+971 50 436 3615',
-  dispatchPhone: '+971 50 436 3615',
-  email: 'malikscrapdealer11@gmail.com',
-  secondaryEmail: 'purchase@malikscrap.com',
-  address: 'Dubai Industrial City, Phase 2, Dubai, UAE',
-  city: 'Dubai',
-  state: 'Dubai',
-  zip: '500001',
-  country: 'United Arab Emirates',
-  hoursWeekday: '24/7 Scrap Receiving & Site Pickup',
-  hoursSaturday: 'Saturday: 24/7 Weighbridge Open',
-  hoursSunday: 'Sunday: 24/7 On-Call Dispatch',
-  googleMapsUrl: 'https://maps.app.goo.gl/4jdRcf7gbDx4L1Z59',
-  emergencyHotline: '24/7 Scrap Collection & Container Placement Available',
-  social: {
-    facebook: 'https://facebook.com',
-    twitter: 'https://twitter.com',
-    linkedin: 'https://linkedin.com',
-    youtube: 'https://youtube.com',
-  },
-};
 
 export default function HomePage() {
   const [contact, setContact] = useState<ContactInfo>(defaultContact);
-  const [services, setServices] = useState<ServiceItem[]>([]);
-  const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [services, setServices] = useState<ServiceItem[]>(fallbackServices);
+  const [blogs, setBlogs] = useState<BlogPost[]>(fallbackBlogs);
   const [activeSection, setActiveSection] = useState('home');
 
   const loadData = async () => {
@@ -56,9 +37,9 @@ export default function HomePage() {
         fetchServices().catch(() => []),
         fetchBlogs().catch(() => []),
       ]);
-      setContact(c);
-      setServices(s);
-      setBlogs(b);
+      if (c && c.companyName) setContact(c);
+      if (s && s.length > 0) setServices(s);
+      if (b && b.length > 0) setBlogs(b);
     } catch (err) {
       console.error('Failed to load data:', err);
     }
@@ -71,7 +52,7 @@ export default function HomePage() {
   // Scroll tracking for nav highlight
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'services', 'delivery', 'blog', 'location', 'contact'];
+      const sections = ['home', 'services', 'about', 'delivery', 'why-trust', 'blog', 'location', 'contact'];
       const scrollPos = window.scrollY + 120;
       for (const section of sections) {
         const el = document.getElementById(section);
@@ -119,46 +100,56 @@ export default function HomePage() {
         {/* 3. Hero Slider */}
         <HeroSlider
           onLearnMore={() => {
-            const el = document.getElementById('about');
+            const el = document.getElementById('services');
             if (el) el.scrollIntoView({ behavior: 'smooth' });
           }}
           onContactUs={() => scrollToConsultation('Sell Scrap - Request Quote & Site Valuation')}
           phone={contact.phone}
         />
 
-        {/* 4. About Section */}
-        <AboutSection
-          onLearnMoreServices={() => {
-            const el = document.getElementById('services');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-          }}
-        />
-
-        {/* 5. Services Slider (What we buy) */}
-        {services.length > 0 && (
+        {/* 4. Services Section: Directly below Hero section with "View All Services" button */}
+        <section id="services">
           <ServicesSlider
             services={services}
             onRequestService={(title) => scrollToConsultation(`Sell Scrap Offer for: ${title}`)}
           />
-        )}
+        </section>
+
+        {/* 5. About Section: Single, solid, well-designed element */}
+        <section id="about">
+          <AboutSection
+            onLearnMoreServices={() => {
+              const el = document.getElementById('services');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+          />
+        </section>
 
         {/* 6. Free Scrap Container Delivery */}
-        <FreeDelivery onGetQuote={() => scrollToConsultation('Request Free Scrap Roll-Off Container Placement')} />
+        <section id="delivery">
+          <FreeDelivery onGetQuote={() => scrollToConsultation('Request Free Scrap Roll-Off Container Placement')} />
+        </section>
 
-        {/* 7. Why Trust Us to Buy Your Scrap */}
-        <WhyTrustSection
-          onGetSupport={() => scrollToConsultation('Scrap Pickup & Container Dispatch Inquiry')}
-          phone={contact.dispatchPhone}
-        />
+        {/* 7. Why Trust Our Services */}
+        <section id="why-trust">
+          <WhyTrustSection
+            onGetSupport={() => scrollToConsultation('Scrap Pickup & Container Dispatch Inquiry')}
+            phone={contact.dispatchPhone}
+          />
+        </section>
 
-        {/* 8. Scrap Selling Blog & Guides */}
-        {blogs.length > 0 && <BlogSection blogs={blogs} />}
+        {/* 8. Blog Section: Directly below Why Trust Our Services, matching Services layout */}
+        <section id="blog">
+          <BlogSection blogs={blogs} />
+        </section>
 
         {/* 9. Location & Interactive Map Preview */}
-        <LocationSection
-          contact={contact}
-          onRequestDropoff={() => scrollToConsultation('Yard Drop-off & Weighbridge Appointment')}
-        />
+        <section id="location">
+          <LocationSection
+            contact={contact}
+            onRequestDropoff={() => scrollToConsultation('Yard Drop-off & Weighbridge Appointment')}
+          />
+        </section>
       </main>
 
       {/* 10. Footer */}
@@ -166,6 +157,9 @@ export default function HomePage() {
         contact={contact}
         onRequestQuote={() => scrollToConsultation('Material Valuation & Scrap Purchase Request')}
       />
+
+      {/* 11. Floating WhatsApp Quick Action Button */}
+      <WhatsAppButton phone={contact.dispatchPhone || contact.phone} />
     </div>
   );
 }

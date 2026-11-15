@@ -96,7 +96,7 @@ export const Footer: React.FC<FooterProps> = ({ contact, onOpenAdmin, onRequestQ
               </li>
               <li>
                 <a href="#location" className="hover:text-orange-400 transition-colors">
-                  Yard Location  Scales
+                  Location  Scales
                 </a>
               </li>
             </ul>
