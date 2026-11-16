@@ -410,7 +410,7 @@ export default function AdminDashboardPage() {
       <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
         <div className="flex items-center gap-3">
           <div className="w-7 h-7 border-3 border-orange-500 border-t-transparent rounded-full animate-spin" />
-          <span className="font-semibold text-sm">Connecting to MongoDB & Loading Dashboard...</span>
+          <span className="font-semibold text-sm">Loading Dashboard...</span>
         </div>
       </div>
     );
@@ -427,13 +427,12 @@ export default function AdminDashboardPage() {
           setActiveTab('overview');
           onSelect?.();
         }}
-        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-          activeTab === 'overview'
+        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'overview'
             ? 'bg-orange-600 text-white shadow-sm'
             : isDark
-            ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-            : 'text-slate-700 hover:bg-slate-100'
-        }`}
+              ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+              : 'text-slate-700 hover:bg-slate-100'
+          }`}
       >
         <Layers className="w-4 h-4" />
         <span>Dashboard Overview</span>
@@ -444,13 +443,12 @@ export default function AdminDashboardPage() {
           setActiveTab('services');
           onSelect?.();
         }}
-        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-          activeTab === 'services'
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'services'
             ? 'bg-orange-600 text-white shadow-sm'
             : isDark
-            ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-            : 'text-slate-700 hover:bg-slate-100'
-        }`}
+              ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+              : 'text-slate-700 hover:bg-slate-100'
+          }`}
       >
         <div className="flex items-center gap-3">
           <Layers className="w-4 h-4" />
@@ -464,13 +462,12 @@ export default function AdminDashboardPage() {
           setActiveTab('prices');
           onSelect?.();
         }}
-        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-          activeTab === 'prices'
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'prices'
             ? 'bg-orange-600 text-white shadow-sm'
             : isDark
-            ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-            : 'text-slate-700 hover:bg-slate-100'
-        }`}
+              ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+              : 'text-slate-700 hover:bg-slate-100'
+          }`}
       >
         <div className="flex items-center gap-3">
           <Coins className="w-4 h-4" />
@@ -484,13 +481,12 @@ export default function AdminDashboardPage() {
           setActiveTab('media');
           onSelect?.();
         }}
-        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-          activeTab === 'media'
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'media'
             ? 'bg-orange-600 text-white shadow-sm'
             : isDark
-            ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-            : 'text-slate-700 hover:bg-slate-100'
-        }`}
+              ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+              : 'text-slate-700 hover:bg-slate-100'
+          }`}
       >
         <div className="flex items-center gap-3">
           <Upload className="w-4 h-4" />
@@ -504,13 +500,12 @@ export default function AdminDashboardPage() {
           setActiveTab('blogs');
           onSelect?.();
         }}
-        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-          activeTab === 'blogs'
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'blogs'
             ? 'bg-orange-600 text-white shadow-sm'
             : isDark
-            ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-            : 'text-slate-700 hover:bg-slate-100'
-        }`}
+              ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+              : 'text-slate-700 hover:bg-slate-100'
+          }`}
       >
         <div className="flex items-center gap-3">
           <BookOpen className="w-4 h-4" />
@@ -524,13 +519,12 @@ export default function AdminDashboardPage() {
           setActiveTab('contact');
           onSelect?.();
         }}
-        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-          activeTab === 'contact'
+        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'contact'
             ? 'bg-orange-600 text-white shadow-sm'
             : isDark
-            ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-            : 'text-slate-700 hover:bg-slate-100'
-        }`}
+              ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+              : 'text-slate-700 hover:bg-slate-100'
+          }`}
       >
         <MapPin className="w-4 h-4" />
         <span>Yard Map & Contact</span>
@@ -541,13 +535,12 @@ export default function AdminDashboardPage() {
           setActiveTab('leads');
           onSelect?.();
         }}
-        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-          activeTab === 'leads'
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'leads'
             ? 'bg-orange-600 text-white shadow-sm'
             : isDark
-            ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-            : 'text-slate-700 hover:bg-slate-100'
-        }`}
+              ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+              : 'text-slate-700 hover:bg-slate-100'
+          }`}
       >
         <div className="flex items-center gap-3">
           <Inbox className="w-4 h-4" />
@@ -562,13 +555,12 @@ export default function AdminDashboardPage() {
             setActiveTab('security');
             onSelect?.();
           }}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
-            activeTab === 'security'
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'security'
               ? 'bg-orange-600 text-white shadow-sm'
               : isDark
-              ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
-              : 'text-slate-700 hover:bg-slate-100'
-          }`}
+                ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+                : 'text-slate-700 hover:bg-slate-100'
+            }`}
         >
           <KeyRound className="w-4 h-4" />
           <span>Admin Credentials</span>

@@ -31,6 +31,7 @@ export const Navbar: React.FC<NavbarProps> = ({ contact, onRequestQuote, activeS
   ];
 
   const handleCtaClick = () => {
+
     setMobileOpen(false);
     if (onRequestQuote) {
       onRequestQuote();
@@ -48,7 +49,7 @@ export const Navbar: React.FC<NavbarProps> = ({ contact, onRequestQuote, activeS
           <Link href="/" className="flex items-center gap-3 group focus:outline-none">
             <div className="relative h-12 w-auto min-w-[130px] max-w-[220px] flex items-center">
               <Image
-                src="/assets/images/navbar-logo.jpeg"
+                src="/assets/images/navbar-logo.png"
                 alt="Malik Scrap Metal Buyers"
                 width={200}
                 height={55}
@@ -142,11 +143,10 @@ export const Navbar: React.FC<NavbarProps> = ({ contact, onRequestQuote, activeS
                           key={link.name}
                           href={link.href}
                           onClick={() => setMobileOpen(false)}
-                          className={`flex items-center justify-between px-3.5 py-3 rounded-lg text-sm transition-all ${
-                            isActive
-                              ? 'bg-orange-50 text-orange-600 font-bold border-l-4 border-orange-600 pl-3'
-                              : 'text-slate-800 hover:text-orange-600 hover:bg-slate-50 font-medium'
-                          }`}
+                          className={`flex items-center justify-between px-3.5 py-3 rounded-lg text-sm transition-all ${isActive
+                            ? 'bg-orange-50 text-orange-600 font-bold border-l-4 border-orange-600 pl-3'
+                            : 'text-slate-800 hover:text-orange-600 hover:bg-slate-50 font-medium'
+                            }`}
                         >
                           <span>{link.name}</span>
                           <ArrowRight className={`w-4 h-4 ${isActive ? 'text-orange-600' : 'text-slate-400 opacity-60'}`} />
