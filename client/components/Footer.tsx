@@ -21,9 +21,9 @@ export const Footer: React.FC<FooterProps> = ({ contact, onRequestQuote }) => {
           {/* Brand & Mission (4 cols) */}
           <div className="lg:col-span-4 space-y-4">
             <Link href="/" className="inline-block focus:outline-none">
-              <div className="relative h-12 w-auto min-w-[130px] max-w-[210px] flex items-center bg-white/5 p-1.5 rounded-lg border border-white/10">
+              <div className="relative h-12 w-auto min-w-[130px] max-w-[210px] flex items-center">
                 <Image
-                  src="/assets/images/Malik-scrap-logo.png"
+                  src="/assets/images/Footer-logo.png"
                   alt="Malik Scrap Metal Buyers"
                   width={200}
                   height={55}

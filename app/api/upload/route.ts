@@ -4,7 +4,7 @@ import { requireAuth, rateLimit, securityHeaders } from '@/server/lib/middleware
 
 export const dynamic = 'force-dynamic';
 
-const token = process.env.UPLOADTHING_TOKEN || 'eyJhcGlLZXkiOiJza19saXZlX2VlZjRiYmY3YTM5NjRjNjU1NjM3YWE0M2EyODk3NDI0YTNjMDAxYjI2M2JhMTBjZmUzMDhjMTEyMWM2MmZkOWYiLCJhcHBJZCI6Imhsb2hjcGM3aDAiLCJyZWdpb25zIjpbInNlYTEiXX0=';
+const token = process.env.UPLOADTHING_TOKEN;
 
 /**
  * POST /api/upload

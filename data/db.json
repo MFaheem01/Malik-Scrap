@@ -1,10 +1,4 @@
 {
-  "admin": {
-    "username": "malikrashid",
-    "password": "$2b$12$Y9e/mr7yEimu1lcGrQfw6Om7jXN5eTa78N6241zG.zD0.t5yJkUa2",
-    "isHashed": true,
-    "_id": "main"
-  },
   "contact": {
     "companyName": "Malik Scrap Metal Buyers",
     "tagline": "We Buy Industrial & Commercial Scrap Metal at Top Market Rates",
@@ -285,5 +279,12 @@
       "date": "2026-11-08 16:15",
       "status": "In Progress"
     }
-  ]
+  ],
+  "admin": {
+    "username": "admin",
+    "password": "$2b$10$x0pDWOGbmxR9OONmQc45sO7.NbEdhYVGy9tvRJAcgvdaguoWhFsCi",
+    "isHashed": true,
+    "lastLogin": "2026-11-16T05:48:36.596Z",
+    "_id": "main"
+  }
 }

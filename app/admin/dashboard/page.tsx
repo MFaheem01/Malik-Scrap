@@ -78,10 +78,12 @@ export default function AdminDashboardPage() {
   const [consultations, setConsultations] = useState<ConsultationLead[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Auto logout on 15 minutes of inactivity as requested
+  // Auto logout on short session timeout (2 minutes of inactivity)
+  const SHORT_SESSION_TIMEOUT_SECONDS = 120; // 2 minutes short session timeout
+  const [secondsRemaining, setSecondsRemaining] = useState(SHORT_SESSION_TIMEOUT_SECONDS);
+
   useEffect(() => {
-    const INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000;
-    let timer: NodeJS.Timeout;
+    let interval: NodeJS.Timeout;
 
     const performLogout = () => {
       localStorage.removeItem('malik_admin_token');
@@ -90,17 +92,26 @@ export default function AdminDashboardPage() {
       router.push('/admin?timeout=true');
     };
 
+    interval = setInterval(() => {
+      setSecondsRemaining((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          performLogout();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
     const resetTimer = () => {
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(performLogout, INACTIVITY_TIMEOUT_MS);
+      setSecondsRemaining(SHORT_SESSION_TIMEOUT_SECONDS);
     };
 
     const events = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart', 'click'];
     events.forEach((ev) => window.addEventListener(ev, resetTimer, { passive: true }));
-    resetTimer();
 
     return () => {
-      if (timer) clearTimeout(timer);
+      clearInterval(interval);
       events.forEach((ev) => window.removeEventListener(ev, resetTimer));
     };
   }, [router]);
@@ -405,9 +416,9 @@ export default function AdminDashboardPage() {
     );
   }
 
-  const renderNavButtons = (onSelect?: () => void) => (
+  const renderNavButtons = (onSelect?: () => void, isDark = false) => (
     <div className="space-y-1.5">
-      <div className="px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+      <div className={`px-3 py-1 text-[11px] font-bold uppercase tracking-wider ${isDark ? 'text-slate-400' : 'text-slate-400'}`}>
         Navigation Menu
       </div>
 
@@ -416,8 +427,13 @@ export default function AdminDashboardPage() {
           setActiveTab('overview');
           onSelect?.();
         }}
-        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'overview' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-          }`}
+        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
+          activeTab === 'overview'
+            ? 'bg-orange-600 text-white shadow-sm'
+            : isDark
+            ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+            : 'text-slate-700 hover:bg-slate-100'
+        }`}
       >
         <Layers className="w-4 h-4" />
         <span>Dashboard Overview</span>
@@ -428,8 +444,13 @@ export default function AdminDashboardPage() {
           setActiveTab('services');
           onSelect?.();
         }}
-        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'services' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-          }`}
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
+          activeTab === 'services'
+            ? 'bg-orange-600 text-white shadow-sm'
+            : isDark
+            ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+            : 'text-slate-700 hover:bg-slate-100'
+        }`}
       >
         <div className="flex items-center gap-3">
           <Layers className="w-4 h-4" />
@@ -443,8 +464,13 @@ export default function AdminDashboardPage() {
           setActiveTab('prices');
           onSelect?.();
         }}
-        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'prices' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-          }`}
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
+          activeTab === 'prices'
+            ? 'bg-orange-600 text-white shadow-sm'
+            : isDark
+            ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+            : 'text-slate-700 hover:bg-slate-100'
+        }`}
       >
         <div className="flex items-center gap-3">
           <Coins className="w-4 h-4" />
@@ -458,8 +484,13 @@ export default function AdminDashboardPage() {
           setActiveTab('media');
           onSelect?.();
         }}
-        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'media' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-          }`}
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
+          activeTab === 'media'
+            ? 'bg-orange-600 text-white shadow-sm'
+            : isDark
+            ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+            : 'text-slate-700 hover:bg-slate-100'
+        }`}
       >
         <div className="flex items-center gap-3">
           <Upload className="w-4 h-4" />
@@ -473,8 +504,13 @@ export default function AdminDashboardPage() {
           setActiveTab('blogs');
           onSelect?.();
         }}
-        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'blogs' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-          }`}
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
+          activeTab === 'blogs'
+            ? 'bg-orange-600 text-white shadow-sm'
+            : isDark
+            ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+            : 'text-slate-700 hover:bg-slate-100'
+        }`}
       >
         <div className="flex items-center gap-3">
           <BookOpen className="w-4 h-4" />
@@ -488,8 +524,13 @@ export default function AdminDashboardPage() {
           setActiveTab('contact');
           onSelect?.();
         }}
-        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'contact' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-          }`}
+        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
+          activeTab === 'contact'
+            ? 'bg-orange-600 text-white shadow-sm'
+            : isDark
+            ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+            : 'text-slate-700 hover:bg-slate-100'
+        }`}
       >
         <MapPin className="w-4 h-4" />
         <span>Yard Map & Contact</span>
@@ -500,8 +541,13 @@ export default function AdminDashboardPage() {
           setActiveTab('leads');
           onSelect?.();
         }}
-        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'leads' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-          }`}
+        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
+          activeTab === 'leads'
+            ? 'bg-orange-600 text-white shadow-sm'
+            : isDark
+            ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+            : 'text-slate-700 hover:bg-slate-100'
+        }`}
       >
         <div className="flex items-center gap-3">
           <Inbox className="w-4 h-4" />
@@ -510,14 +556,19 @@ export default function AdminDashboardPage() {
         <Badge variant="orange">{consultations.length}</Badge>
       </button>
 
-      <div className="pt-4 border-t border-slate-100 mt-4">
+      <div className={`pt-4 border-t ${isDark ? 'border-slate-800' : 'border-slate-100'} mt-4`}>
         <button
           onClick={() => {
             setActiveTab('security');
             onSelect?.();
           }}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${activeTab === 'security' ? 'bg-orange-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100'
-            }`}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer text-left transition-all ${
+            activeTab === 'security'
+              ? 'bg-orange-600 text-white shadow-sm'
+              : isDark
+              ? 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+              : 'text-slate-700 hover:bg-slate-100'
+          }`}
         >
           <KeyRound className="w-4 h-4" />
           <span>Admin Credentials</span>
@@ -528,63 +579,122 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-100 font-sans">
-      {/* Top Header */}
-      <header className="bg-slate-950 text-white border-b border-slate-800 px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+      {/* Top Header - Styled to match website footer: bg-[#070d1e], navy dark theme, Footer-logo.png, orange accents */}
+      <header className="bg-[#070d1e] text-slate-300 border-b border-slate-800 px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-40 shadow-lg">
+        <div className="flex items-center gap-3.5">
           {/* Mobile hamburger menu button opening Shadcn Sheet sidebar */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
               <button
                 type="button"
-                className="p-2 text-slate-300 hover:text-white rounded-md bg-slate-900 border border-slate-800 md:hidden cursor-pointer"
+                className="p-2 text-slate-300 hover:text-white rounded-lg bg-slate-900/90 border border-slate-700/80 md:hidden cursor-pointer transition-colors"
                 aria-label="Open mobile admin menu"
               >
                 <Menu className="w-5 h-5" />
               </button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-72 p-4 bg-white dark:bg-slate-900 overflow-y-auto">
-              <SheetHeader className="mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
-                <SheetTitle className="text-sm font-bold flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-orange-600" />
-                  <span>Admin Menu</span>
-                </SheetTitle>
-              </SheetHeader>
-              {renderNavButtons(() => setMobileMenuOpen(false))}
+            <SheetContent side="left" className="w-[300px] sm:w-[340px] p-0 flex flex-col justify-between bg-[#070d1e] text-slate-300 border-r border-slate-800 shadow-2xl h-full">
+              <div className="flex flex-col flex-1 overflow-y-auto bg-[#070d1e]">
+                <SheetHeader className="p-5 border-b border-slate-800 bg-[#060a18] pr-12 text-left">
+                  <SheetTitle>
+                    <Link href="/" className="inline-block" onClick={() => setMobileMenuOpen(false)}>
+                      <Image
+                        src="/assets/images/Footer-logo.png"
+                        alt="Malik Scrap Metal Buyers"
+                        width={170}
+                        height={46}
+                        className="h-9 w-auto object-contain"
+                      />
+                    </Link>
+                  </SheetTitle>
+                  <p className="text-[11px] text-slate-400 mt-1 font-normal">
+                    Licensed Industrial Scrap Metal Merchant Admin
+                  </p>
+                </SheetHeader>
+                <div className="p-4">
+                  {renderNavButtons(() => setMobileMenuOpen(false), true)}
+                </div>
+              </div>
+
+              <div className="p-4 border-t border-slate-800 bg-[#060a18] flex items-center justify-between shrink-0">
+                <div className="flex items-center gap-1.5 text-xs text-slate-400 font-mono">
+                  <Clock className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+                  <span>
+                    Idle: {Math.floor(secondsRemaining / 60)}:{String(secondsRemaining % 60).padStart(2, '0')}
+                  </span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1 font-semibold cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Sign Out</span>
+                </button>
+              </div>
             </SheetContent>
           </Sheet>
 
-          <Link href="/" className="inline-block">
-            <Image
-              src="/assets/images/Malik-scrap-logo.png"
-              alt="Malik Scrap Metal Buyers"
-              width={140}
-              height={36}
-              className="h-8 sm:h-9 w-auto object-contain hidden sm:block"
-            />
+          {/* Footer Logo in Header */}
+          <Link href="/" className="flex items-center gap-2 group focus:outline-none">
+            <div className="relative h-10 w-auto min-w-[120px] max-w-[200px] flex items-center">
+              <Image
+                src="/assets/images/Footer-logo.png"
+                alt="Malik Scrap Metal Buyers"
+                width={190}
+                height={50}
+                className="h-9 sm:h-10 w-auto object-contain transition-transform group-hover:scale-102"
+              />
+            </div>
           </Link>
+
+          {/* Scrap Purchasing Hotline - Matched from Footer */}
+          <div className="hidden xl:flex flex-col text-left border-l border-slate-800 pl-4 py-0.5">
+            <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
+              Scrap Purchasing Hotline
+            </span>
+            <a
+              href="tel:+971504363615"
+              className="text-xs font-bold text-orange-400 hover:text-orange-300 transition-colors flex items-center gap-1"
+            >
+              <Phone className="w-3.5 h-3.5 text-orange-500" />
+              <span>+971 50 436 3615</span>
+            </a>
+          </div>
 
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-base sm:text-lg font-bold">Malik Scrap Admin</h1>
-              <span className="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
+              <h1 className="text-sm sm:text-base font-bold text-white tracking-tight">Admin Dashboard</h1>
+              <span className="text-[10px] bg-emerald-950/90 text-emerald-400 border border-emerald-800/80 px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                MongoDB Atlas Active
+                Atlas Live
               </span>
             </div>
-            <p className="text-[11px] sm:text-xs text-slate-400 line-clamp-1">
-              Admin Portal: Manage Services, Rates, Location & Leads
+            <p className="text-[11px] text-slate-400 line-clamp-1">
+              Industrial Scrap Management & Rate Control
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Live Inactivity Session Timeout Indicator */}
+          <div
+            title="Auto logout triggered after 2 minutes of idle time"
+            className="flex items-center gap-1.5 text-xs bg-slate-900/90 border border-slate-700/80 text-slate-300 px-2.5 py-1.5 rounded-lg font-mono shadow-xs"
+          >
+            <Clock className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+            <span className="hidden md:inline text-slate-400 text-[11px]">Auto-Logout:</span>
+            <span className="font-semibold text-orange-400">
+              {Math.floor(secondsRemaining / 60)}:{String(secondsRemaining % 60).padStart(2, '0')}
+            </span>
+          </div>
+
           <button
             onClick={() => loadAllData()}
             title="Refresh database records"
-            className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700/70 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Refresh Data</span>
+            <span className="hidden sm:inline">Refresh</span>
           </button>
 
           <Link
@@ -592,7 +702,7 @@ export default function AdminDashboardPage() {
             target="_blank"
             rel="noopener noreferrer"
             title="View customer-facing website in new tab"
-            className="flex items-center gap-1.5 text-xs font-semibold text-orange-400 hover:text-orange-300 bg-orange-950/60 border border-orange-800/80 px-3 py-2 rounded transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-orange-400 hover:text-orange-300 bg-orange-950/60 border border-orange-800/80 px-3 py-1.5 rounded-lg transition-colors"
           >
             <span className="hidden sm:inline">View Website</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -602,7 +712,7 @@ export default function AdminDashboardPage() {
             variant="destructive"
             size="sm"
             onClick={handleLogout}
-            className="flex items-center gap-1.5 text-xs cursor-pointer px-3 py-2"
+            className="flex items-center gap-1.5 text-xs cursor-pointer px-3 py-1.5 rounded-lg bg-rose-900/80 hover:bg-rose-800 text-rose-100 border border-rose-700/60"
             title="Securely sign out of administrative session"
           >
             <LogOut className="w-3.5 h-3.5" />

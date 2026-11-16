@@ -286,7 +286,7 @@ export const initialData = {
   ],
   admin: {
     username: 'admin',
-    password: '$2a$10$K7L1RK549l2g60fK8u5i9u88KzC6h/i8Zp6V4C0eR4q3q4w3e2r1t',
+    password: '$2b$10$x0pDWOGbmxR9OONmQc45sO7.NbEdhYVGy9tvRJAcgvdaguoWhFsCi',
     isHashed: true,
     lastLogin: '',
   },

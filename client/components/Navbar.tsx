@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, ArrowRight, Phone, MessageSquare, MapPin } from 'lucide-react';
+import { Menu, ArrowRight, Phone, MapPin, X } from 'lucide-react';
 import { ContactInfo } from '../types';
 import {
   Sheet,
@@ -44,11 +44,11 @@ export const Navbar: React.FC<NavbarProps> = ({ contact, onRequestQuote, activeS
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-xs border-b border-slate-100 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo brand with responsive image */}
+          {/* Logo brand with updated navbar-logo.jpeg */}
           <Link href="/" className="flex items-center gap-3 group focus:outline-none">
-            <div className="relative h-12 w-auto min-w-[120px] max-w-[200px] flex items-center">
+            <div className="relative h-12 w-auto min-w-[130px] max-w-[220px] flex items-center">
               <Image
-                src="/assets/images/Malik-scrap-logo.png"
+                src="/assets/images/navbar-logo.jpeg"
                 alt="Malik Scrap Metal Buyers"
                 width={200}
                 height={55}
@@ -58,7 +58,7 @@ export const Navbar: React.FC<NavbarProps> = ({ contact, onRequestQuote, activeS
             </div>
           </Link>
 
-          {/* Desktop Nav Links */}
+          {/* Desktop Nav Links (Visible on desktop lg+) */}
           <nav className="hidden lg:flex items-center gap-7">
             {navLinks.map((link) => {
               const isActive =
@@ -94,22 +94,20 @@ export const Navbar: React.FC<NavbarProps> = ({ contact, onRequestQuote, activeS
             </button>
           </div>
 
-          {/* Mobile menu button with Shadcn Sheet Sidebar */}
+          {/* Mobile & Tablet hamburger button (Visible below lg) */}
           <div className="flex items-center gap-2 lg:hidden">
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-              <SheetTrigger asChild>
-                <button
-                  className="p-2 text-slate-700 hover:text-orange-600 focus:outline-none rounded-md hover:bg-slate-100 cursor-pointer"
-                  aria-label="Open mobile navigation sidebar"
-                >
-                  <Menu className="w-6 h-6" />
-                </button>
+              <SheetTrigger
+                className="p-2.5 text-slate-700 hover:text-orange-600 focus:outline-none rounded-lg hover:bg-slate-100 transition-colors cursor-pointer border border-slate-200 flex items-center justify-center"
+                aria-label="Toggle navigation menu"
+              >
+                <Menu className="w-6 h-6" />
               </SheetTrigger>
 
-              <SheetContent side="left" className="w-[300px] sm:w-[350px] p-0 flex flex-col justify-between">
-                <div>
-                  {/* Sheet Header */}
-                  <SheetHeader className="p-5 border-b border-slate-100 bg-slate-50/50">
+              <SheetContent side="left" className="w-[320px] sm:w-[360px] p-0 flex flex-col justify-between bg-white text-slate-900 border-r border-slate-200 shadow-2xl h-full">
+                <div className="flex flex-col flex-1 overflow-y-auto bg-white">
+                  {/* Sheet Header with updated navbar logo */}
+                  <SheetHeader className="p-5 border-b border-slate-100 bg-slate-50/90 pr-12 text-left">
                     <SheetTitle>
                       <Link
                         href="/"
@@ -117,7 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({ contact, onRequestQuote, activeS
                         className="inline-block"
                       >
                         <Image
-                          src="/assets/images/Malik-scrap-logo.png"
+                          src="/assets/images/navbar-logo.jpeg"
                           alt="Malik Scrap Metal Buyers"
                           width={180}
                           height={48}
@@ -125,32 +123,44 @@ export const Navbar: React.FC<NavbarProps> = ({ contact, onRequestQuote, activeS
                         />
                       </Link>
                     </SheetTitle>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-xs text-slate-500 mt-1 font-normal">
                       Licensed Industrial Scrap Metal Merchant
                     </p>
                   </SheetHeader>
 
                   {/* Navigation Links */}
-                  <div className="py-4 px-3 space-y-1">
-                    {navLinks.map((link) => (
-                      <Link
-                        key={link.name}
-                        href={link.href}
-                        onClick={() => setMobileOpen(false)}
-                        className="flex items-center justify-between px-3.5 py-3 rounded-lg text-sm font-semibold text-slate-700 hover:text-orange-600 hover:bg-orange-50/60 transition-colors"
-                      >
-                        <span>{link.name}</span>
-                        <ArrowRight className="w-4 h-4 text-slate-400 opacity-60" />
-                      </Link>
-                    ))}
+                  <div className="py-4 px-3 space-y-1.5 bg-white">
+                    {navLinks.map((link) => {
+                      const isActive =
+                        (link.href === '/' && activeSection === 'home') ||
+                        (link.href.startsWith('/#') && activeSection === link.href.substring(2)) ||
+                        (link.href === '/services' && activeSection === 'services') ||
+                        (link.href === '/blog' && activeSection === 'blog');
+
+                      return (
+                        <Link
+                          key={link.name}
+                          href={link.href}
+                          onClick={() => setMobileOpen(false)}
+                          className={`flex items-center justify-between px-3.5 py-3 rounded-lg text-sm transition-all ${
+                            isActive
+                              ? 'bg-orange-50 text-orange-600 font-bold border-l-4 border-orange-600 pl-3'
+                              : 'text-slate-800 hover:text-orange-600 hover:bg-slate-50 font-medium'
+                          }`}
+                        >
+                          <span>{link.name}</span>
+                          <ArrowRight className={`w-4 h-4 ${isActive ? 'text-orange-600' : 'text-slate-400 opacity-60'}`} />
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
 
                 {/* Footer in Mobile Sheet */}
-                <div className="p-5 border-t border-slate-100 bg-slate-50 space-y-3">
+                <div className="p-5 border-t border-slate-100 bg-slate-50 space-y-3 shrink-0">
                   <button
                     onClick={handleCtaClick}
-                    className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-4 rounded-lg text-center flex items-center justify-center gap-2 shadow-sm text-sm cursor-pointer"
+                    className="w-full bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white font-semibold py-3 px-4 rounded-lg text-center flex items-center justify-center gap-2 shadow-sm text-sm cursor-pointer transition-all"
                   >
                     <span>Sell Your Scrap Now</span>
                     <ArrowRight className="w-4 h-4" />
@@ -159,9 +169,9 @@ export const Navbar: React.FC<NavbarProps> = ({ contact, onRequestQuote, activeS
                   <div className="pt-2 space-y-2 text-xs text-slate-600">
                     <a
                       href={`tel:${contact.phone.replace(/[^0-9+]/g, '')}`}
-                      className="flex items-center gap-2 font-medium text-slate-800 hover:text-orange-600"
+                      className="flex items-center gap-2 font-medium text-slate-800 hover:text-orange-600 transition-colors"
                     >
-                      <Phone className="w-3.5 h-3.5 text-orange-600" />
+                      <Phone className="w-3.5 h-3.5 text-orange-600 shrink-0" />
                       <span>{contact.phone}</span>
                     </a>
                     <div className="flex items-start gap-2 text-slate-500">

@@ -1,74 +1,91 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, ChevronRight, PhoneCall, ShieldCheck } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  ArrowRight,
+  ShieldCheck,
+  PhoneCall,
+} from 'lucide-react';
 
 interface HeroSliderProps {
   onLearnMore: () => void;
   onContactUs: () => void;
-  phone: string;
+  phone?: string;
 }
 
-export const HeroSlider: React.FC<HeroSliderProps> = ({ onLearnMore, onContactUs, phone }) => {
+export const HeroSlider: React.FC<HeroSliderProps> = ({
+  onLearnMore,
+  onContactUs,
+  phone = '+971 50 436 3615',
+}) => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   const slides = [
     {
       id: 1,
-      title: 'We Buy All Types of Industrial & Commercial Scrap Metal',
+      image: '/assets/images/copper_wire_brass_1793892530421.jpg',
+      highlightBadge: 'Licensed Scrap Metal Merchant Since 1984',
+      title: 'Highest Cash Rates Paid for Copper, Brass & High-Grade Alloys',
       subtitle:
-        'Turn your factory cutoffs, surplus inventory, and demolition steel into instant revenue. Certified digital weighbridge weighing, top daily rates, and immediate same-day wire or cash settlement.',
-      image: '/assets/images/hero_scrap_facility_1793892530533.jpg',
-      highlightBadge: 'Licensed Scrap Metal Buyers | Top Payouts Paid',
-      buttonPrimaryText: 'Contact Us',
-      buttonSecondaryText: 'View Our Services',
+        'Get certified handheld XRF spectrometer assays on-site. We purchase millberry copper wire, plumbing brass, insulated cables, and commercial chillers with instant payout.',
+      buttonPrimaryText: 'Request Scrap Quote',
+      buttonSecondaryText: 'Explore Purchasing Services',
     },
     {
       id: 2,
-      title: 'Free Roll-Off Scrap Bin Placement for Factories & Job Sites',
+      image: '/assets/images/ferrous_steel_recycling_1793892530649.jpg',
+      highlightBadge: 'Direct Secondary Mill Payouts — No Middlemen',
+      title: 'Heavy Melting Steel, Rebar & High-Tonnage Demolition Scrap',
       subtitle:
-        'We deliver 10 to 40-yard heavy-gauge steel scrap dumpsters directly to your workshop, manufacturing plant, or demolition site at zero cost. You load the metal—we collect, weigh, buy, and pay.',
-      image: '/assets/images/industrial_scrap_containers_1793892531220.jpg',
-      highlightBadge: 'Zero Bin Rental Fees | 24-Hour Container Swap',
-      buttonPrimaryText: 'Contact Us',
-      buttonSecondaryText: 'View Our Services',
+        'Immediate purchase of HMS 1 & 2 steel, factory rebar offcuts, structural I-beams, and heavy industrial machinery with certified weighbridge receipts.',
+      buttonPrimaryText: 'Schedule High-Tonnage Pickup',
+      buttonSecondaryText: 'View Scrap Metal Prices',
     },
     {
       id: 3,
-      title: 'Highest Cash Rates Paid for Copper, Brass & High-Grade Alloys',
+      image: '/assets/images/industrial_scrap_containers_1793892531220.jpg',
+      highlightBadge: 'Free Roll-Off Containers Across Dubai & UAE',
+      title: 'Complimentary Roll-Off Scrap Bin Placement & Site Logistics',
       subtitle:
-        'Instant handheld XRF spectrographic grading guarantees maximum certified valuation on Bare Bright wire, Millberry copper, brass fixtures, aluminum extrusions, and stainless steel.',
-      image: '/assets/images/copper_wire_brass_1793892530421.jpg',
-      highlightBadge: 'Immediate Payment | Handheld XRF Alloy Assay',
-      buttonPrimaryText: 'Contact Us',
-      buttonSecondaryText: 'View Our Services',
+        'We supply 10, 20, 30, and 40-yard scrap metal containers directly to your job site or workshop. Free delivery, scheduled pickup, and instant settlement.',
+      buttonPrimaryText: 'Request Free Container Placement',
+      buttonSecondaryText: 'Learn About Yard Weighbridge',
     },
   ];
 
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const totalSlides = slides.length;
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 7000);
+      setCurrentSlide((prev) => (prev + 1) % totalSlides);
+    }, 6000);
     return () => clearInterval(timer);
-  }, [slides.length]);
+  }, [totalSlides]);
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+    setCurrentSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
   };
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
+    setCurrentSlide((prev) => (prev + 1) % totalSlides);
   };
 
   const active = slides[currentSlide];
 
   return (
-    <section id="home" className="relative w-full overflow-hidden bg-slate-950 text-white min-h-[580px] lg:min-h-[660px] flex items-center">
+    <section
+      id="home"
+      className="relative w-full overflow-hidden bg-slate-950 text-white h-[620px] sm:h-[660px] lg:h-[700px] flex items-center justify-center select-none"
+    >
+      {/* Background slide images */}
       {slides.map((slide, idx) => (
         <div
           key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-            }`}
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+            idx === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+          }`}
         >
           <img
             src={slide.image}
@@ -80,43 +97,45 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ onLearnMore, onContactUs
         </div>
       ))}
 
+      {/* Fixed 'Previous' Carousel Button — mathematically locked at vertical center */}
       <button
         onClick={prevSlide}
-        className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-30 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold tracking-widest uppercase px-2.5 py-7 items-center justify-center shadow-lg transition-all cursor-pointer rounded-r-md group [writing-mode:vertical-rl] rotate-180"
+        className="absolute left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-slate-900/80 hover:bg-orange-600 active:bg-orange-700 text-white flex items-center justify-center shadow-2xl backdrop-blur-md border border-white/15 transition-all cursor-pointer group"
         aria-label="Previous Slide"
       >
-        <span className="flex items-center gap-1.5 group-hover:-translate-y-1 transition-transform">
-          <ChevronRight className="w-4 h-4 rotate-90" />
-          Previous
-        </span>
+        <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-x-0.5 transition-transform" />
       </button>
 
+      {/* Fixed 'Next' Carousel Button — mathematically locked at vertical center */}
       <button
         onClick={nextSlide}
-        className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-30 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold tracking-widest uppercase px-2.5 py-7 items-center justify-center shadow-lg transition-all cursor-pointer rounded-l-md group [writing-mode:vertical-rl]"
+        className="absolute right-2 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-slate-900/80 hover:bg-orange-600 active:bg-orange-700 text-white flex items-center justify-center shadow-2xl backdrop-blur-md border border-white/15 transition-all cursor-pointer group"
         aria-label="Next Slide"
       >
-        <span className="flex items-center gap-1.5 group-hover:translate-y-1 transition-transform">
-          <ChevronRight className="w-4 h-4 -rotate-90" />
-          Next
-        </span>
+        <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-0.5 transition-transform" />
       </button>
 
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 text-center flex flex-col items-center">
+      {/* Main Hero Content — locked in place */}
+      <div className="relative z-20 max-w-5xl mx-auto px-6 sm:px-12 lg:px-16 text-center flex flex-col items-center">
+        {/* Trust badge */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-orange-400 text-xs font-semibold mb-6 shadow-sm">
           <ShieldCheck className="w-4 h-4 text-orange-400" />
           <span>{active.highlightBadge}</span>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-4xl leading-tight sm:leading-tight lg:leading-tight mb-6 drop-shadow-md">
-          {active.title}
-        </h1>
+        {/* Stable text block with consistent minimum height to prevent jitter */}
+        <div className="min-h-[190px] sm:min-h-[220px] lg:min-h-[230px] flex flex-col items-center justify-center">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight sm:leading-tight lg:leading-tight mb-4 drop-shadow-md">
+            {active.title}
+          </h1>
 
-        <p className="text-base sm:text-lg text-slate-200 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
-          {active.subtitle}
-        </p>
+          <p className="text-sm sm:text-base lg:text-lg text-slate-200 max-w-3xl mx-auto leading-relaxed font-normal">
+            {active.subtitle}
+          </p>
+        </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto mt-8">
           <button
             onClick={onContactUs}
             className="w-full sm:w-auto bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white font-semibold text-sm px-8 py-4 rounded-lg shadow-lg shadow-orange-600/30 transition-all flex items-center justify-center gap-2.5 cursor-pointer group"
@@ -134,22 +153,28 @@ export const HeroSlider: React.FC<HeroSliderProps> = ({ onLearnMore, onContactUs
           </button>
         </div>
 
-        <div className="mt-8 flex items-center gap-2 text-xs text-slate-300">
+        {/* Dispatch Hotline info */}
+        <div className="mt-7 flex items-center gap-2 text-xs text-slate-300">
           <PhoneCall className="w-3.5 h-3.5 text-orange-400" />
-          <span>Direct Scrap Purchasing & Dispatch Hotline: <strong className="text-white font-semibold">{phone}</strong></span>
+          <span>
+            Direct Scrap Purchasing &amp; Dispatch Hotline:{' '}
+            <strong className="text-white font-semibold">{phone}</strong>
+          </span>
         </div>
+      </div>
 
-        <div className="flex items-center gap-2.5 mt-10">
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentSlide(i)}
-              className={`h-2 rounded-full transition-all cursor-pointer ${i === currentSlide ? 'w-8 bg-orange-500' : 'w-2 bg-white/40 hover:bg-white/70'
-                }`}
-              aria-label={`Go to slide ${i + 1}`}
-            />
-          ))}
-        </div>
+      {/* Bottom slide indicator dots */}
+      <div className="absolute bottom-6 inset-x-0 z-30 flex items-center justify-center gap-2">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentSlide(i)}
+            className={`h-2 rounded-full transition-all cursor-pointer ${
+              i === currentSlide ? 'w-8 bg-orange-600' : 'w-2 bg-white/40 hover:bg-white/70'
+            }`}
+            aria-label={`Go to slide ${i + 1}`}
+          />
+        ))}
       </div>
     </section>
   );

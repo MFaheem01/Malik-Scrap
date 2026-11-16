@@ -24,26 +24,23 @@ export const Footer: React.FC<FooterProps> = ({ contact, onOpenAdmin, onRequestQ
     <footer id="contact" className="bg-[#070d1e] text-slate-300 relative border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
-          {/* Brand  Mission (4 cols) */}
+          {/* Brand & Mission (4 cols) */}
           <div className="lg:col-span-4 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-orange-600 flex items-center justify-center text-white shadow-md shadow-orange-600/20">
-                <Factory className="w-6 h-6" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-white tracking-tight flex items-center">
-                  Ferro<span className="text-orange-500">Max</span>
-                </span>
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 -mt-1">
-                  Industrial Scrap
-                </span>
+              <div className="relative h-12 w-auto min-w-[130px] max-w-[210px] flex items-center bg-white/5 p-1.5 rounded-lg border border-white/10">
+                <img
+                  src="/assets/images/Footer-logo.jpeg"
+                  alt="Malik Scrap Metal Buyers"
+                  className="h-10 w-auto object-contain"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/src/assets/images/Footer-logo.jpeg';
+                  }}
+                />
               </div>
             </div>
 
             <p className="text-xs text-slate-400 leading-relaxed font-normal">
-              Premier industrial scrap metal processing, certified weighbridge grading, commercial roll-off container
-              dispatch, and demolition salvage. Delivering maximum  yields and sustainable circular solutions
-              since 1984.
+              Premier industrial scrap metal buyers. We purchase ferrous and non-ferrous scrap, certified weighbridge grading, commercial roll-off scrap container dispatch, and plant demolition salvage. Delivering top payouts and honest weights with fast digital settlement.
             </p>
 
             <div className="pt-2">

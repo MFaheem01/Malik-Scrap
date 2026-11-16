@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from "react"
+import { createPortal } from "react-dom"
 import { X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -102,6 +103,11 @@ export interface SheetContentProps extends React.HTMLAttributes<HTMLDivElement> 
 export const SheetContent = React.forwardRef<HTMLDivElement, SheetContentProps>(
   ({ className, children, side = "right", ...props }, ref) => {
     const { open, setOpen } = useSheet()
+    const [mounted, setMounted] = React.useState(false)
+
+    React.useEffect(() => {
+      setMounted(true)
+    }, [])
 
     React.useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent) => {
@@ -124,28 +130,29 @@ export const SheetContent = React.forwardRef<HTMLDivElement, SheetContentProps>(
       }
     }, [open])
 
-    if (!open) return null
+    if (!open || !mounted) return null
 
     const sideClasses = {
       top: "inset-x-0 top-0 border-b animate-in slide-in-from-top duration-300",
       bottom: "inset-x-0 bottom-0 border-t animate-in slide-in-from-bottom duration-300",
-      left: "inset-y-0 left-0 h-full w-3/4 max-w-sm border-r animate-in slide-in-from-left duration-300",
-      right: "inset-y-0 right-0 h-full w-3/4 max-w-sm border-l animate-in slide-in-from-right duration-300",
+      left: "inset-y-0 left-0 h-full w-[320px] sm:w-[380px] max-w-[88vw] border-r border-slate-200 animate-in slide-in-from-left duration-300",
+      right: "inset-y-0 right-0 h-full w-[320px] sm:w-[380px] max-w-[88vw] border-l border-slate-200 animate-in slide-in-from-right duration-300",
     }
 
-    return (
-      <div className="fixed inset-0 z-50 flex">
-        {/* Backdrop */}
+    return createPortal(
+      <div className="fixed inset-0 z-[100] flex">
+        {/* Full screen backdrop */}
         <div
           onClick={() => setOpen(false)}
-          className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300"
+          className="fixed inset-0 bg-slate-950/75 backdrop-blur-xs transition-opacity duration-300 z-[100]"
+          aria-hidden="true"
         />
 
-        {/* Sheet panel */}
+        {/* Sheet panel - 100% solid, fully opaque */}
         <div
           ref={ref}
           className={cn(
-            "fixed z-50 gap-4 bg-white p-6 shadow-2xl transition ease-in-out dark:bg-slate-900 flex flex-col",
+            "fixed z-[101] bg-white text-slate-900 shadow-2xl transition ease-in-out flex flex-col h-full max-h-screen overflow-hidden",
             sideClasses[side],
             className
           )}
@@ -153,35 +160,37 @@ export const SheetContent = React.forwardRef<HTMLDivElement, SheetContentProps>(
         >
           <button
             onClick={() => setOpen(false)}
-            className="absolute right-4 top-4 rounded-sm p-1 text-slate-500 opacity-70 hover:opacity-100 hover:bg-slate-100 transition-opacity focus:outline-none cursor-pointer"
+            className="absolute right-3.5 top-3.5 z-20 rounded-lg p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none cursor-pointer"
+            aria-label="Close menu"
           >
             <X className="h-5 w-5" />
-            <span className="sr-only">Close</span>
           </button>
           {children}
         </div>
-      </div>
+      </div>,
+      document.body
     )
   }
 )
 SheetContent.displayName = "SheetContent"
 
 export const SheetHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col space-y-2 text-left", className)} {...props} />
+  <div className={cn("flex flex-col space-y-1.5 text-left", className)} {...props} />
 )
 SheetHeader.displayName = "SheetHeader"
 
 export const SheetTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
-    <h2 ref={ref} className={cn("text-lg font-semibold text-slate-900 dark:text-slate-100", className)} {...props} />
+    <h2 ref={ref} className={cn("text-lg font-semibold text-slate-900", className)} {...props} />
   )
 )
 SheetTitle.displayName = "SheetTitle"
 
 export const SheetDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
-    <p ref={ref} className={cn("text-sm text-slate-500 dark:text-slate-400", className)} {...props} />
+    <p ref={ref} className={cn("text-sm text-slate-500", className)} {...props} />
   )
 )
 SheetDescription.displayName = "SheetDescription"
+
 
