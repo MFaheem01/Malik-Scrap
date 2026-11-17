@@ -11,11 +11,9 @@ import {
   Edit2,
   Save,
   LogOut,
-  ExternalLink,
   Download,
   CheckCircle2,
   AlertCircle,
-  TrendingUp,
   X,
   FileText,
   DollarSign,
@@ -36,7 +34,21 @@ import {
   updateConsultationStatus,
   loginAdmin,
   updateAdminCredentials,
+  clearAdminToken,
 } from '../api';
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogPortal,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from '../../components/ui/alert-dialog';
+import { Button } from '../../components/ui/button';
 
 interface AdminDashboardProps {
   isOpen: boolean;
@@ -76,9 +88,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   // Status banners
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toastType, setToastType] = useState<'success' | 'error'>('success');
 
-  const showToast = (msg: string) => {
+  const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
     setToastMessage(msg);
+    setToastType(type);
     setTimeout(() => setToastMessage(null), 3500);
   };
 
@@ -103,6 +117,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   const handleLogout = () => {
+    clearAdminToken();
     setIsAdminLoggedIn(false);
     showToast('Logged out of Admin Portal');
   };
@@ -116,17 +131,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     shortDesc: '',
     description: '',
     icon: 'Hammer',
-    image: '/src/assets/images/ferrous_steel__1793892530649.jpg',
+    image: '/assets/images/service-ferrous-steel.jpg',
     badge: 'Popular',
     highlight: '',
   });
+  const [serviceSaving, setServiceSaving] = useState(false);
 
   const handleSaveService = async (e: React.FormEvent) => {
     e.preventDefault();
+    setServiceSaving(true);
     try {
       if (isCreatingService) {
         await createService(serviceFormData as any);
-        showToast('Service added successfully');
+        showToast('Service added successfully — live on website');
       } else if (editingService) {
         await updateService(editingService.id, serviceFormData);
         showToast('Service updated successfully');
@@ -134,16 +151,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       setIsCreatingService(false);
       setEditingService(null);
       await onRefreshData();
-    } catch (err) {
-      showToast('Error saving service');
+    } catch (err: any) {
+      showToast(err.message || 'Error saving service. Session may have expired — please re-login.', 'error');
+    } finally {
+      setServiceSaving(false);
     }
   };
 
   const handleDeleteService = async (id: string) => {
-    if (confirm('Are you sure you want to delete this service?')) {
-      await deleteService(id);
-      showToast('Service deleted');
-      await onRefreshData();
+    try {
+      const ok = await deleteService(id);
+      if (ok) {
+        showToast('Service deleted successfully');
+        await onRefreshData();
+      } else {
+        showToast('Failed to delete service. Session may have expired.', 'error');
+      }
+    } catch (err: any) {
+      showToast('Error deleting service', 'error');
     }
   };
 
@@ -156,11 +181,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     content: '',
     author: 'Admin',
     category: 'Market Trends',
-    image: '/src/assets/images/copper_wire_brass_1793892530421.jpg',
+    image: '/assets/images/blog-scrap-pricing-guide.jpg',
   });
+  const [blogSaving, setBlogSaving] = useState(false);
 
   const handleSaveBlog = async (e: React.FormEvent) => {
     e.preventDefault();
+    setBlogSaving(true);
     try {
       if (isCreatingBlog) {
         await createBlog(blogFormData);
@@ -172,20 +199,28 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       setIsCreatingBlog(false);
       setEditingBlog(null);
       await onRefreshData();
-    } catch (err) {
-      showToast('Error saving blog post');
+    } catch (err: any) {
+      showToast(err.message || 'Error saving blog post. Session may have expired.', 'error');
+    } finally {
+      setBlogSaving(false);
     }
   };
 
   const handleDeleteBlog = async (id: string) => {
-    if (confirm('Are you sure you want to delete this blog post?')) {
-      await deleteBlog(id);
-      showToast('Blog post deleted');
-      await onRefreshData();
+    try {
+      const ok = await deleteBlog(id);
+      if (ok) {
+        showToast('Blog post deleted');
+        await onRefreshData();
+      } else {
+        showToast('Failed to delete blog. Session may have expired.', 'error');
+      }
+    } catch (err: any) {
+      showToast('Error deleting blog post', 'error');
     }
   };
 
-  // ----------------- CONTACT  LOCATION MANAGEMENT ----------------- //
+  // ----------------- CONTACT & LOCATION MANAGEMENT ----------------- //
   const [contactForm, setContactForm] = useState<ContactInfo>(contact);
 
   const handleSaveContact = async (e: React.FormEvent) => {
@@ -195,7 +230,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       showToast('Contact details and location updated successfully');
       await onRefreshData();
     } catch (err) {
-      showToast('Error updating contact information');
+      showToast('Error updating contact information', 'error');
     }
   };
 
@@ -208,7 +243,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       showToast('Scrap metal prices updated');
       await onRefreshData();
     } catch (err) {
-      showToast('Error updating scrap prices');
+      showToast('Error updating scrap prices', 'error');
     }
   };
 
@@ -218,7 +253,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     setPriceList(updated);
   };
 
-  // ----------------- SECURITY  PASSWORD ----------------- //
+  // ----------------- SECURITY & PASSWORD ----------------- //
   const [currentPass, setCurrentPass] = useState('');
   const [newUsername, setNewUsername] = useState('admin');
   const [newPass, setNewPass] = useState('');
@@ -229,7 +264,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     e.preventDefault();
     setSecurityError('');
 
-    if (newPass  newPass !== confirmPass) {
+    if (newPass && newPass !== confirmPass) {
       setSecurityError('New password and confirmation do not match');
       return;
     }
@@ -262,7 +297,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-2 sm:p-4 animate-fade-in overflow-y-auto">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-6xl max-h-[94vh] flex flex-col overflow-hidden border border-slate-200">
         {/* Top Header */}
-        <div className="bg-slate-900 text-white px-6 py-4 flex items-center justify-between border-b border-slate-800">
+        <div className="bg-slate-900 text-white px-6 py-4 flex items-center justify-between border-b border-slate-800 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded bg-orange-600 flex items-center justify-center text-white font-bold shadow">
               <Shield className="w-5 h-5" />
@@ -275,18 +310,35 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </span>
               </h2>
               <p className="text-xs text-slate-400">
-                Manage services, industry articles, contact details, prices  customer leads
+                Manage services, industry articles, contact details, prices & customer leads
               </p>
             </div>
           </div>
-
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="ml-4 w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors cursor-pointer shrink-0"
+            aria-label="Close admin dashboard"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Toast alert */}
-        {toastMessage(
-          <div className="bg-emerald-600 text-white px-4 py-2 text-xs font-medium flex items-center justify-between animate-fade-in">
+        {toastMessage && (
+          <div
+            className={`px-4 py-2 text-xs font-medium flex items-center justify-between animate-fade-in shrink-0 ${
+              toastType === 'error'
+                ? 'bg-red-600 text-white'
+                : 'bg-emerald-600 text-white'
+            }`}
+          >
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4" />
+              {toastType === 'error' ? (
+                <AlertCircle className="w-4 h-4" />
+              ) : (
+                <CheckCircle2 className="w-4 h-4" />
+              )}
               <span>{toastMessage}</span>
             </div>
             <button onClick={() => setToastMessage(null)} className="cursor-pointer">
@@ -310,7 +362,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </p>
               </div>
 
-              {loginError(
+              {loginError && (
                 <div className="p-3 bg-red-50 border border-red-200 text-red-600 text-xs rounded mb-4 flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{loginError}</span>
@@ -362,112 +414,52 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </div>
         ) : (
           /* Logged In Dashboard Layout */
-          <div className="flex-1 flex flex-col md:flex-row overflow-hidden bg-slate-100">
+          <div className="flex-1 flex flex-col md:flex-row overflow-hidden bg-slate-100 min-h-0">
             {/* Sidebar Navigation */}
-            <aside className="w-full md:w-60 bg-white border-r border-slate-200 p-4 shrink-0 flex flex-col justify-between">
+            <aside className="w-full md:w-60 bg-white border-r border-slate-200 p-4 shrink-0 flex flex-col justify-between md:overflow-y-auto">
               <nav className="space-y-1">
-                <button
-                  onClick={() => setActiveTab('overview')}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer text-left ${activeTab === 'overview'
-                    ? 'bg-orange-600 text-white shadow-sm'
-                    : 'text-slate-700 hover:bg-slate-100'
+                {(
+                  [
+                    { id: 'overview', label: 'Dashboard Overview', icon: <Layers className="w-4 h-4" />, count: null },
+                    { id: 'services', label: 'Manage Services', icon: <Layers className="w-4 h-4" />, count: services.length },
+                    { id: 'blogs', label: 'Blog Posts', icon: <BookOpen className="w-4 h-4" />, count: blogs.length },
+                    { id: 'contact', label: 'Contact & Location', icon: <Phone className="w-4 h-4" />, count: null },
+                    { id: 'leads', label: 'Customer Inquiries', icon: <Inbox className="w-4 h-4" />, count: consultations.length, highlight: true },
+                    { id: 'prices', label: 'Scrap Prices Board', icon: <DollarSign className="w-4 h-4" />, count: null },
+                    { id: 'security', label: 'Admin Password', icon: <KeyRound className="w-4 h-4" />, count: null },
+                    { id: 'export', label: 'ZIP Code Export', icon: <Archive className="w-4 h-4" />, count: null },
+                  ] as const
+                ).map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id as any)}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer text-left ${
+                      activeTab === tab.id
+                        ? 'bg-orange-600 text-white shadow-sm'
+                        : 'text-slate-700 hover:bg-slate-100'
                     }`}
-                >
-                  <Layers className="w-4 h-4" />
-                  <span>Dashboard Overview</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab('services')}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer text-left ${activeTab === 'services'
-                    ? 'bg-orange-600 text-white shadow-sm'
-                    : 'text-slate-700 hover:bg-slate-100'
-                    }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Layers className="w-4 h-4" />
-                    <span>Manage Services</span>
-                  </div>
-                  <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded font-mono text-slate-600">
-                    {services.length}
-                  </span>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab('blogs')}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer text-left ${activeTab === 'blogs'
-                    ? 'bg-orange-600 text-white shadow-sm'
-                    : 'text-slate-700 hover:bg-slate-100'
-                    }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <BookOpen className="w-4 h-4" />
-                    <span>Blog Posts</span>
-                  </div>
-                  <span className="text-[10px] bg-slate-100 px-1.5 py-0.5 rounded font-mono text-slate-600">
-                    {blogs.length}
-                  </span>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab('contact')}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer text-left ${activeTab === 'contact'
-                    ? 'bg-orange-600 text-white shadow-sm'
-                    : 'text-slate-700 hover:bg-slate-100'
-                    }`}
-                >
-                  <Phone className="w-4 h-4" />
-                  <span>Contact  Location</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab('leads')}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer text-left ${activeTab === 'leads'
-                    ? 'bg-orange-600 text-white shadow-sm'
-                    : 'text-slate-700 hover:bg-slate-100'
-                    }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Inbox className="w-4 h-4" />
-                    <span>Customer Inquiries</span>
-                  </div>
-                  <span className="text-[10px] bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded font-mono font-bold">
-                    {consultations.length}
-                  </span>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab('prices')}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer text-left ${activeTab === 'prices'
-                    ? 'bg-orange-600 text-white shadow-sm'
-                    : 'text-slate-700 hover:bg-slate-100'
-                    }`}
-                >
-                  <DollarSign className="w-4 h-4" />
-                  <span>Scrap Prices Board</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab('security')}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer text-left ${activeTab === 'security'
-                    ? 'bg-orange-600 text-white shadow-sm'
-                    : 'text-slate-700 hover:bg-slate-100'
-                    }`}
-                >
-                  <KeyRound className="w-4 h-4" />
-                  <span>Admin Password</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab('export')}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer text-left ${activeTab === 'export'
-                    ? 'bg-orange-600 text-white shadow-sm'
-                    : 'text-slate-700 hover:bg-slate-100'
-                    }`}
-                >
-                  <Archive className="w-4 h-4" />
-                  <span>ZIP Code Export</span>
-                </button>
+                  >
+                    <div className="flex items-center gap-3">
+                      {tab.icon}
+                      <span>{tab.label}</span>
+                    </div>
+                    {tab.count !== null && (
+                      <span
+                        className={`text-[10px] px-1.5 py-0.5 rounded font-mono font-bold ${
+                          tab.highlight
+                            ? activeTab === tab.id
+                              ? 'bg-orange-500 text-white'
+                              : 'bg-orange-100 text-orange-700'
+                            : activeTab === tab.id
+                            ? 'bg-orange-500 text-white'
+                            : 'bg-slate-100 text-slate-600'
+                        }`}
+                      >
+                        {tab.count}
+                      </span>
+                    )}
+                  </button>
+                ))}
               </nav>
 
               <div className="pt-4 border-t border-slate-200 mt-4">
@@ -484,7 +476,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             {/* Main Tab View Area */}
             <main className="flex-1 p-6 overflow-y-auto">
               {/* 1. OVERVIEW */}
-              {activeTab === 'overview'(
+              {activeTab === 'overview' && (
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-xl font-bold text-slate-900">System Dashboard Overview</h3>
@@ -544,11 +536,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
                     <div className="flex items-center justify-between mb-4">
                       <h4 className="text-sm font-bold text-slate-900">
-                        Recent Inbound Consultation  Pickup Requests
+                        Recent Inbound Consultation & Pickup Requests
                       </h4>
                       <button
                         onClick={() => setActiveTab('leads')}
-                        className="text-xs text-orange-600 font-semibold hover:underline"
+                        className="text-xs text-orange-600 font-semibold hover:underline cursor-pointer"
                       >
                         View All
                       </button>
@@ -567,7 +559,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               </div>
                               <p className="text-xs text-slate-500 line-clamp-1">{lead.subject} - {lead.message}</p>
                             </div>
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-100 text-orange-800">
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-100 text-orange-800 shrink-0">
                               {lead.status}
                             </span>
                           </div>
@@ -579,7 +571,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               )}
 
               {/* 2. SERVICES TAB */}
-              {activeTab === 'services'(
+              {activeTab === 'services' && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
@@ -598,7 +590,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           shortDesc: '',
                           description: '',
                           icon: 'Hammer',
-                          image: '/src/assets/images/ferrous_steel__1793892530649.jpg',
+                          image: '/assets/images/service-ferrous-steel.jpg',
                           badge: 'Popular',
                           highlight: '',
                         });
@@ -611,7 +603,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   </div>
 
                   {/* Form Modal for Creating/Editing Service */}
-                  {(isCreatingService || editingService)(
+                  {(isCreatingService || editingService) && (
                     <div className="bg-white p-6 rounded-xl border border-orange-200 shadow-md">
                       <div className="flex items-center justify-between mb-4 border-b pb-3">
                         <h4 className="font-bold text-slate-900 text-sm">
@@ -622,7 +614,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             setIsCreatingService(false);
                             setEditingService(null);
                           }}
-                          className="text-slate-400 hover:text-slate-700"
+                          className="text-slate-400 hover:text-slate-700 cursor-pointer"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -638,7 +630,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             value={serviceFormData.title}
                             onChange={(e) => setServiceFormData({ ...serviceFormData, title: e.target.value })}
                             required
-                            placeholder="e.g. Copper Reclamation  "
+                            placeholder="e.g. We Buy Copper Wire & Cables"
                             className="w-full text-xs px-3 py-2 rounded border border-slate-300 focus:outline-none focus:border-orange-500"
                           />
                         </div>
@@ -653,11 +645,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             className="w-full text-xs px-3 py-2 rounded border border-slate-300 focus:outline-none focus:border-orange-500"
                           >
                             <option value="Ferrous">Ferrous Metal</option>
-                            <option value="Non-Ferrous">Non-Ferrous  Copper</option>
-                            <option value="Commercial Logistics">Commercial Logistics  Containers</option>
-                            <option value="Industrial Service">Industrial Demolition</option>
-                            <option value="Automotive">Automotive  Catalytic</option>
-                            <option value="Exotic Alloys">Exotic Alloys  E-Scrap</option>
+                            <option value="Non-Ferrous">Non-Ferrous & Copper</option>
+                            <option value="HVAC & Machinery">HVAC & Machinery</option>
+                            <option value="Electrical Scrap">Electrical Scrap</option>
+                            <option value="Alloy Scrap">Alloy Scrap</option>
+                            <option value="Brass & Bronze">Brass & Bronze</option>
+                            <option value="Motors & Generators">Motors & Generators</option>
+                            <option value="Battery Recycling">Battery Recycling</option>
+                            <option value="Industrial Buyout">Industrial Buyout</option>
+                            <option value="Logistics & Collection">Logistics & Collection</option>
+                            <option value="Weighbridge Service">Weighbridge Service</option>
                           </select>
                         </div>
 
@@ -673,9 +670,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             <option value="Hammer">Hammer (Heavy Steel)</option>
                             <option value="Zap">Zap (Copper / Wire)</option>
                             <option value="Truck">Truck (Roll-off Bin Fleet)</option>
-                            <option value="Wrench">Wrench (Demolition  Dismantling)</option>
+                            <option value="Wrench">Wrench (Demolition & Dismantling)</option>
                             <option value="Car">Car (Auto Scrap)</option>
-                            <option value="Cpu">Cpu (Specialty Alloys  E-Scrap)</option>
+                            <option value="Cpu">Cpu (Specialty Alloys & E-Scrap)</option>
+                            <option value="Layers">Layers (General)</option>
                           </select>
                         </div>
 
@@ -708,7 +706,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                         <div className="sm:col-span-2">
                           <label className="block text-xs font-semibold text-slate-700 mb-1">
-                            Full Metallurgy  Processing Details (Shown in Read More modal)
+                            Full Details (Shown in Read More modal)
                           </label>
                           <textarea
                             rows={3}
@@ -716,6 +714,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             onChange={(e) => setServiceFormData({ ...serviceFormData, description: e.target.value })}
                             placeholder="Full details on grading, scale tickets, minimum quantities, etc."
                             className="w-full text-xs px-3 py-2 rounded border border-slate-300 focus:outline-none focus:border-orange-500 resize-none"
+                          />
+                        </div>
+
+                        <div className="sm:col-span-2">
+                          <label className="block text-xs font-semibold text-slate-700 mb-1">
+                            Highlight / Guaranteed Advantage (Optional)
+                          </label>
+                          <input
+                            type="text"
+                            value={serviceFormData.highlight || ''}
+                            onChange={(e) => setServiceFormData({ ...serviceFormData, highlight: e.target.value })}
+                            placeholder="e.g. Instant XRF assay test with immediate payment."
+                            className="w-full text-xs px-3 py-2 rounded border border-slate-300 focus:outline-none focus:border-orange-500"
                           />
                         </div>
 
@@ -738,16 +749,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               setIsCreatingService(false);
                               setEditingService(null);
                             }}
-                            className="px-4 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                            className="px-4 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded cursor-pointer"
                           >
                             Cancel
                           </button>
                           <button
                             type="submit"
-                            className="px-5 py-2 text-xs font-semibold bg-orange-600 hover:bg-orange-700 text-white rounded flex items-center gap-1.5 shadow"
+                            disabled={serviceSaving}
+                            className="px-5 py-2 text-xs font-semibold bg-orange-600 hover:bg-orange-700 text-white rounded flex items-center gap-1.5 shadow disabled:opacity-60 cursor-pointer"
                           >
                             <Save className="w-4 h-4" />
-                            <span>Save Service</span>
+                            <span>{serviceSaving ? 'Saving…' : 'Save Service'}</span>
                           </button>
                         </div>
                       </form>
@@ -769,13 +781,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <tbody className="divide-y divide-slate-100">
                         {services.map((srv) => (
                           <tr key={srv.id} className="hover:bg-slate-50/80">
-                            <td className="py-3 px-4 font-bold text-slate-900 flex items-center gap-3">
-                              <img
-                                src={srv.image}
-                                alt={srv.title}
-                                className="w-10 h-10 object-cover rounded border border-slate-200 shrink-0"
-                              />
-                              <span>{srv.title}</span>
+                            <td className="py-3 px-4 font-bold text-slate-900">
+                              <div className="flex items-center gap-3">
+                                <img
+                                  src={srv.image}
+                                  alt={srv.title}
+                                  className="w-10 h-10 object-cover rounded border border-slate-200 shrink-0"
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).src = '/assets/images/service-ferrous-steel.jpg';
+                                  }}
+                                />
+                                <span>{srv.title}</span>
+                              </div>
                             </td>
                             <td className="py-3 px-4 text-slate-600">{srv.category}</td>
                             <td className="py-3 px-4">
@@ -797,18 +814,41 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                   setIsCreatingService(false);
                                   setServiceFormData(srv);
                                 }}
-                                className="p-1.5 text-slate-600 hover:text-orange-600 rounded hover:bg-slate-100"
+                                className="p-1.5 text-slate-600 hover:text-orange-600 rounded hover:bg-slate-100 cursor-pointer"
                                 title="Edit Service"
                               >
                                 <Edit2 className="w-3.5 h-3.5" />
                               </button>
-                              <button
-                                onClick={() => handleDeleteService(srv.id)}
-                                className="p-1.5 text-red-500 hover:text-red-700 rounded hover:bg-red-50"
-                                title="Delete Service"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
+
+                              {/* Shadcn AlertDialog — Delete Confirmation */}
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <button
+                                    className="p-1.5 text-red-500 hover:text-red-700 rounded hover:bg-red-50 cursor-pointer"
+                                    title="Delete Service"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </AlertDialogTrigger>
+                                <AlertDialogPortal>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Delete Service</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        Are you sure you want to delete{' '}
+                                        <strong className="text-slate-800">"{srv.title}"</strong>?
+                                        This action is permanent and will remove it from the live website immediately.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => handleDeleteService(srv.id)}>
+                                        Delete Service
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialogPortal>
+                              </AlertDialog>
                             </td>
                           </tr>
                         ))}
@@ -819,7 +859,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               )}
 
               {/* 3. BLOG POSTS TAB */}
-              {activeTab === 'blogs'(
+              {activeTab === 'blogs' && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
@@ -838,7 +878,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           content: '',
                           author: 'Admin',
                           category: 'Market Trends',
-                          image: '/src/assets/images/copper_wire_brass_1793892530421.jpg',
+                          image: '/assets/images/blog-scrap-pricing-guide.jpg',
                         });
                       }}
                       className="bg-orange-600 hover:bg-orange-700 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition-colors cursor-pointer"
@@ -849,7 +889,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   </div>
 
                   {/* Blog Form */}
-                  {(isCreatingBlog || editingBlog)(
+                  {(isCreatingBlog || editingBlog) && (
                     <div className="bg-white p-6 rounded-xl border border-orange-200 shadow-md">
                       <div className="flex items-center justify-between mb-4 border-b pb-3">
                         <h4 className="font-bold text-slate-900 text-sm">
@@ -860,7 +900,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             setIsCreatingBlog(false);
                             setEditingBlog(null);
                           }}
-                          className="text-slate-400 hover:text-slate-700"
+                          className="text-slate-400 hover:text-slate-700 cursor-pointer"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -904,7 +944,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             value={blogFormData.category}
                             onChange={(e) => setBlogFormData({ ...blogFormData, category: e.target.value })}
                             required
-                            placeholder="e.g. Market Trends, Operations,  Guide"
+                            placeholder="e.g. Market Trends, Operations, Guide"
                             className="w-full text-xs px-3 py-2 rounded border border-slate-300 focus:outline-none focus:border-orange-500"
                           />
                         </div>
@@ -956,16 +996,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               setIsCreatingBlog(false);
                               setEditingBlog(null);
                             }}
-                            className="px-4 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded"
+                            className="px-4 py-2 text-xs text-slate-600 hover:bg-slate-100 rounded cursor-pointer"
                           >
                             Cancel
                           </button>
                           <button
                             type="submit"
-                            className="px-5 py-2 text-xs font-semibold bg-orange-600 hover:bg-orange-700 text-white rounded flex items-center gap-1.5 shadow"
+                            disabled={blogSaving}
+                            className="px-5 py-2 text-xs font-semibold bg-orange-600 hover:bg-orange-700 text-white rounded flex items-center gap-1.5 shadow disabled:opacity-60 cursor-pointer"
                           >
                             <Save className="w-4 h-4" />
-                            <span>Save Article</span>
+                            <span>{blogSaving ? 'Saving…' : 'Save Article'}</span>
                           </button>
                         </div>
                       </form>
@@ -987,13 +1028,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <tbody className="divide-y divide-slate-100">
                         {blogs.map((b) => (
                           <tr key={b.id} className="hover:bg-slate-50/80">
-                            <td className="py-3 px-4 font-bold text-slate-900 flex items-center gap-3">
-                              <img
-                                src={b.image}
-                                alt={b.title}
-                                className="w-10 h-10 object-cover rounded border border-slate-200 shrink-0"
-                              />
-                              <span className="line-clamp-1">{b.title}</span>
+                            <td className="py-3 px-4 font-bold text-slate-900">
+                              <div className="flex items-center gap-3">
+                                <img
+                                  src={b.image}
+                                  alt={b.title}
+                                  className="w-10 h-10 object-cover rounded border border-slate-200 shrink-0"
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).src = '/assets/images/blog-scrap-pricing-guide.jpg';
+                                  }}
+                                />
+                                <span className="line-clamp-1">{b.title}</span>
+                              </div>
                             </td>
                             <td className="py-3 px-4 text-slate-600">{b.author}</td>
                             <td className="py-3 px-4 text-slate-500">{b.date}</td>
@@ -1009,18 +1055,41 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                   setIsCreatingBlog(false);
                                   setBlogFormData(b);
                                 }}
-                                className="p-1.5 text-slate-600 hover:text-orange-600 rounded hover:bg-slate-100"
+                                className="p-1.5 text-slate-600 hover:text-orange-600 rounded hover:bg-slate-100 cursor-pointer"
                                 title="Edit Article"
                               >
                                 <Edit2 className="w-3.5 h-3.5" />
                               </button>
-                              <button
-                                onClick={() => handleDeleteBlog(b.id)}
-                                className="p-1.5 text-red-500 hover:text-red-700 rounded hover:bg-red-50"
-                                title="Delete Article"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
+
+                              {/* Shadcn AlertDialog — Delete Blog Confirmation */}
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <button
+                                    className="p-1.5 text-red-500 hover:text-red-700 rounded hover:bg-red-50 cursor-pointer"
+                                    title="Delete Article"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </AlertDialogTrigger>
+                                <AlertDialogPortal>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Delete Blog Post</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        Are you sure you want to permanently delete{' '}
+                                        <strong className="text-slate-800">"{b.title}"</strong>?
+                                        This cannot be undone.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => handleDeleteBlog(b.id)}>
+                                        Delete Post
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialogPortal>
+                              </AlertDialog>
                             </td>
                           </tr>
                         ))}
@@ -1030,12 +1099,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </div>
               )}
 
-              {/* 4. CONTACT  LOCATION SETTINGS */}
-              {activeTab === 'contact'(
+              {/* 4. CONTACT & LOCATION SETTINGS */}
+              {activeTab === 'contact' && (
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-xl font-bold text-slate-900">
-                      Contact Details  Location Settings
+                      Contact Details & Location Settings
                     </h3>
                     <p className="text-xs text-slate-500">
                       Update the business phone number, email address, physical yard address, and scale hours.
@@ -1125,7 +1194,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                       <div className="sm:col-span-2">
                         <label className="block text-xs font-semibold text-slate-700 mb-1">
-                          Physical Yard Street Address  Scale Entrance
+                          Physical Yard Street Address & Scale Entrance
                         </label>
                         <input
                           type="text"
@@ -1219,19 +1288,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         className="bg-orange-600 hover:bg-orange-700 text-white font-semibold text-xs px-6 py-2.5 rounded-lg flex items-center gap-2 shadow-sm transition-colors cursor-pointer"
                       >
                         <Save className="w-4 h-4" />
-                        <span>Save Contact  Location Updates</span>
+                        <span>Save Contact & Location Updates</span>
                       </button>
                     </div>
                   </form>
                 </div>
               )}
 
-              {/* 5. LEADS  CONSULTATIONS */}
-              {activeTab === 'leads'(
+              {/* 5. LEADS & CONSULTATIONS */}
+              {activeTab === 'leads' && (
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-xl font-bold text-slate-900">
-                      Customer Pickup  Consultation Inquiries
+                      Customer Pickup & Consultation Inquiries
                     </h3>
                     <p className="text-xs text-slate-500">
                       Submissions received through the homepage 'Free Consultation / Request Scrap Pickup' form.
@@ -1264,7 +1333,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 <a href={`mailto:${lead.email}`} className="text-orange-600 hover:underline block text-[11px]">
                                   {lead.email}
                                 </a>
-                                {lead.phone(
+                                {lead.phone && (
                                   <a href={`tel:${lead.phone}`} className="text-slate-500 block text-[11px]">
                                     {lead.phone}
                                   </a>
@@ -1274,14 +1343,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               <td className="py-3 px-4 text-slate-600 max-w-sm">{lead.message || '-'}</td>
                               <td className="py-3 px-4">
                                 <span
-                                  className={`px-2 py-0.5 rounded font-bold text-[10px] uppercase ${lead.status === 'Completed'
-                                    ? 'bg-emerald-100 text-emerald-800'
-                                    : lead.status === 'Scheduled'
+                                  className={`px-2 py-0.5 rounded font-bold text-[10px] uppercase ${
+                                    lead.status === 'Completed'
+                                      ? 'bg-emerald-100 text-emerald-800'
+                                      : lead.status === 'Scheduled'
                                       ? 'bg-blue-100 text-blue-800'
                                       : lead.status === 'In Progress'
-                                        ? 'bg-amber-100 text-amber-800'
-                                        : 'bg-orange-100 text-orange-800'
-                                    }`}
+                                      ? 'bg-amber-100 text-amber-800'
+                                      : 'bg-orange-100 text-orange-800'
+                                  }`}
                                 >
                                   {lead.status}
                                 </span>
@@ -1290,7 +1360,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 <select
                                   value={lead.status}
                                   onChange={(e) => handleLeadStatusChange(lead.id, e.target.value)}
-                                  className="text-[11px] p-1 border rounded bg-white text-slate-700"
+                                  className="text-[11px] p-1 border rounded bg-white text-slate-700 cursor-pointer"
                                 >
                                   <option value="New">New</option>
                                   <option value="In Progress">In Progress</option>
@@ -1308,7 +1378,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               )}
 
               {/* 6. SCRAP PRICES BOARD */}
-              {activeTab === 'prices'(
+              {activeTab === 'prices' && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
@@ -1368,7 +1438,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               <select
                                 value={item.trend}
                                 onChange={(e) => handlePriceChange(idx, 'trend', e.target.value)}
-                                className="px-2 py-1 border rounded text-xs"
+                                className="px-2 py-1 border rounded text-xs cursor-pointer"
                               >
                                 <option value="up">Up (Green)</option>
                                 <option value="stable">Stable (Gray)</option>
@@ -1391,8 +1461,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </div>
               )}
 
-              {/* 7. SECURITY  PASSWORD (Explicit User Request) */}
-              {activeTab === 'security'(
+              {/* 7. SECURITY & PASSWORD */}
+              {activeTab === 'security' && (
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-xl font-bold text-slate-900">Admin Security Credentials</h3>
@@ -1402,7 +1472,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   </div>
 
                   <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm max-w-lg">
-                    {securityError(
+                    {securityError && (
                       <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded mb-4 flex items-center gap-2">
                         <AlertCircle className="w-4 h-4 shrink-0" />
                         <span>{securityError}</span>
@@ -1445,7 +1515,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           type="password"
                           value={newPass}
                           onChange={(e) => setNewPass(e.target.value)}
-                          placeholder="At least 6 characters"
+                          placeholder="At least 8 characters"
                           className="w-full text-xs px-3 py-2 rounded border border-slate-300 focus:outline-none focus:border-orange-500"
                         />
                       </div>
@@ -1477,11 +1547,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </div>
               )}
 
-              {/* 8. EXPORT ZIP ARCHIVE (Explicit User Request) */}
-              {activeTab === 'export'(
+              {/* 8. EXPORT ZIP ARCHIVE */}
+              {activeTab === 'export' && (
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-xl font-bold text-slate-900">Project Source Code  Files ZIP</h3>
+                    <h3 className="text-xl font-bold text-slate-900">Project Source Code & Files ZIP</h3>
                     <p className="text-xs text-slate-500">
                       Download the complete, self-contained project files in a ZIP archive for local deployment or backup.
                     </p>
@@ -1497,7 +1567,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           Complete Codebase Package (ZIP)
                         </h4>
                         <p className="text-xs text-slate-500">
-                          Includes Vite + React frontend, Express API server, persistent database models, Shadcn components  Poppins styling.
+                          Includes Next.js frontend, API routes, persistent database models, Shadcn components & Tailwind styling.
                         </p>
                       </div>
                     </div>
@@ -1505,10 +1575,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <div className="p-4 bg-slate-50 rounded-lg border border-slate-200 text-xs text-slate-600 space-y-1.5">
                       <p className="font-semibold text-slate-800">Archive Package Contents:</p>
                       <ul className="list-disc list-inside space-y-0.5 text-slate-600">
-                        <li><code>/server.ts</code> — Full-stack Express backend  API endpoints</li>
-                        <li><code>/src/*</code> — React components, Swiper slider, Admin Portal, Types  CSS</li>
-                        <li><code>/data/db.json</code> — Persistent JSON database with sample services  blogs</li>
-                        <li><code>package.json</code>, <code>tsconfig.json</code>, <code>vite.config.ts</code></li>
+                        <li><code>/app/api/*</code> — Full-stack Next.js API routes</li>
+                        <li><code>/src/*</code> — React components, Swiper slider, Admin Portal, Types & CSS</li>
+                        <li><code>/components/ui/*</code> — Shadcn UI components</li>
+                        <li><code>/data/db.json</code> — Persistent JSON database with sample services & blogs</li>
+                        <li><code>package.json</code>, <code>tsconfig.json</code>, <code>next.config.js</code></li>
                       </ul>
                     </div>
 

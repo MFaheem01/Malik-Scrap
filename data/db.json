@@ -24,74 +24,7 @@
     },
     "_id": "main"
   },
-  "services": [
-    {
-      "id": "srv-1",
-      "title": "We Buy Ferrous Metal Scrap",
-      "category": "Ferrous Scrap",
-      "shortDesc": "Immediate purchase of heavy melting steel (HMS 1 & 2), structural I-beams, factory rebar offcuts, plate cuttings, cast iron, and machinery frames.",
-      "description": "We purchase all volumes of ferrous metal scrap directly from fabrication workshops, machine shops, construction contractors, and demolition sites. Full certified weighbridge receipts with direct mill pricing and zero middleman deductions.",
-      "icon": "Hammer",
-      "image": "/assets/images/ferrous_steel_re.jpg",
-      "badge": "High Tonnage",
-      "highlight": "Top cash & wire payout per metric ton with free collection."
-    },
-    {
-      "id": "srv-2",
-      "title": "We Buy Copper Wire & Tubing",
-      "category": "Non-Ferrous Scrap",
-      "shortDesc": "Top-market rates paid for Bare Bright copper wire, Millberry copper, #1 & #2 copper tubing, armored power cables, and transformer windings.",
-      "description": "Sell your copper scrap to certified buyers. Using handheld XRF elemental spectrometers, we grade copper purity on the spot, guaranteeing honest tare deductions and the highest daily payout in cash or instant bank transfer.",
-      "icon": "Zap",
-      "image": "/assets/images/copper_wire_brass_1793892530421.jpg",
-      "badge": "Highest Payout",
-      "highlight": "Instant XRF assay test with immediate payment."
-    },
-    {
-      "id": "srv-3",
-      "title": "Free Roll-Off Scrap Bin Placement",
-      "category": "Logistics & Collection",
-      "shortDesc": "We drop off 10, 20, 30, and 40-yard heavy-duty steel scrap containers at your workshop or job site free of charge. Fill the bin, and we buy the metal.",
-      "description": "Streamline your facility scrap management. When your scrap bin is full, call our dispatch hotline—we swap the container within 24 hours, weigh your scrap on certified scales, and settle your payment immediately.",
-      "icon": "Truck",
-      "image": "/assets/images/industrial_scrap_containers_1793892531220.jpg",
-      "badge": "Free Delivery",
-      "highlight": "Zero bin rental fees with scheduled or on-call collection."
-    },
-    {
-      "id": "srv-4",
-      "title": "Plant Decommissioning & Demolition Scrap Purchase",
-      "category": "Industrial Buyout",
-      "shortDesc": "Complete scrap buyouts for retired manufacturing facilities, chillers, electrical switchgears, structural steel buildings, and industrial boilers.",
-      "description": "Our certified dismantling crews manage turnkey salvage and removal. We purchase all recovered scrap metal on-site, providing crane mobilization, torch cutting, and full site clearance with environmental documentation.",
-      "icon": "Wrench",
-      "image": "/assets/images/hero_scrap_facility_1793892530533.jpg",
-      "badge": "Turnkey Buyout",
-      "highlight": "Complete plant clearance with advance scrap deposit."
-    },
-    {
-      "id": "srv-5",
-      "title": "We Buy Aluminum & Stainless Steel",
-      "category": "Alloy Scrap",
-      "shortDesc": "Purchasing 6063 clean aluminum extrusion, alloy wheels, sheet offcuts, CNC turnings, and grades 304, 316, and 310 stainless steel.",
-      "description": "Turn your production offcuts and manufacturing scrap into steady cash flow. We accept both clean solids and unsegregated machine turnings, offering customized pickup schedules for CNC machine shops and extrusion plants.",
-      "icon": "Layers",
-      "image": "/assets/images/copper_wire_brass_1793892530421.jpg",
-      "badge": "Daily Buying",
-      "highlight": "Consistent high rates for industrial manufacturers."
-    },
-    {
-      "id": "srv-6",
-      "title": "We Buy Brass, Batteries & Automotive Scrap",
-      "category": "Automotive & Brass",
-      "shortDesc": "Purchasing yellow and red brass fixtures, bronze bushings, industrial lead-acid batteries, automotive engines, transmissions, and catalytic converters.",
-      "description": "We purchase commercial batches of scrap automotive parts, heavy equipment batteries, and brass plumbing scrap. Certified depollution and recycling documentation provided for all industrial clients.",
-      "icon": "Car",
-      "image": "/assets/images/ferrous_steel_re.jpg",
-      "badge": "Instant Settlement",
-      "highlight": "Certified scale weighing and immediate bank wire."
-    }
-  ],
+  "services": [],
   "blogs": [
     {
       "id": "blog-1",
@@ -284,7 +217,7 @@
     "username": "admin",
     "password": "$2b$10$x0pDWOGbmxR9OONmQc45sO7.NbEdhYVGy9tvRJAcgvdaguoWhFsCi",
     "isHashed": true,
-    "lastLogin": "2026-11-16T06:37:05.497Z",
+    "lastLogin": "2026-11-17T17:41:58.529Z",
     "_id": "main"
   }
 }

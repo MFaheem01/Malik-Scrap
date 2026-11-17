@@ -116,7 +116,7 @@ export const Navbar: React.FC<NavbarProps> = ({ contact, onRequestQuote, activeS
                         className="inline-block"
                       >
                         <Image
-                          src="/assets/images/navbar-logo.jpeg"
+                          src="/assets/images/navbar-logo.png"
                           alt="Malik Scrap Metal Buyers"
                           width={180}
                           height={48}

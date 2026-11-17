@@ -32,6 +32,16 @@ import {
   Clock,
 } from 'lucide-react';
 import { Button } from '../../../client/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '../../../client/components/ui/alert-dialog';
 import { Input } from '../../../client/components/ui/input';
 import { Textarea } from '../../../client/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../client/components/ui/card';
@@ -70,6 +80,11 @@ export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState<'overview' | 'services' | 'prices' | 'blogs' | 'media' | 'contact' | 'leads' | 'security'>('overview');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // AlertDialog state for confirmations
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [deleteServiceTarget, setDeleteServiceTarget] = useState<{ id: string; title: string } | null>(null);
+  const [deleteBlogTarget, setDeleteBlogTarget] = useState<{ id: string; title: string } | null>(null);
 
   const [contact, setContact] = useState<ContactInfo | null>(null);
   const [services, setServices] = useState<ServiceItem[]>([]);
@@ -152,12 +167,14 @@ export default function AdminDashboardPage() {
   }, [router, loadAllData]);
 
   const handleLogout = () => {
-    if (confirm('Are you sure you want to log out of the admin panel?')) {
-      localStorage.removeItem('malik_admin_token');
-      localStorage.removeItem('Malik_admin_token');
-      localStorage.removeItem('malik_admin_user');
-      router.push('/admin');
-    }
+    setShowLogoutDialog(true);
+  };
+
+  const confirmLogout = () => {
+    localStorage.removeItem('malik_admin_token');
+    localStorage.removeItem('Malik_admin_token');
+    localStorage.removeItem('malik_admin_user');
+    router.push('/admin');
   };
 
   // --- Services Management ---
@@ -170,7 +187,7 @@ export default function AdminDashboardPage() {
     shortDesc: '',
     description: '',
     icon: 'Hammer',
-    image: '/assets/images/ferrous_steel_re.jpg',
+    image: '/assets/images/service-ferrous-steel.jpg',
     badge: 'We Buy',
     highlight: '',
   });
@@ -211,11 +228,15 @@ export default function AdminDashboardPage() {
   };
 
   const handleDeleteService = async (id: string, title: string) => {
-    if (confirm(`Are you sure you want to permanently delete "${title}"?`)) {
-      await deleteService(id);
-      showToast('Service removed from database');
-      await loadAllData();
-    }
+    setDeleteServiceTarget({ id, title });
+  };
+
+  const confirmDeleteService = async () => {
+    if (!deleteServiceTarget) return;
+    await deleteService(deleteServiceTarget.id);
+    showToast('Service removed from database');
+    setDeleteServiceTarget(null);
+    await loadAllData();
   };
 
   // --- Blogs Management ---
@@ -267,11 +288,15 @@ export default function AdminDashboardPage() {
   };
 
   const handleDeleteBlog = async (id: string, title: string) => {
-    if (confirm(`Are you sure you want to delete article "${title}"?`)) {
-      await deleteBlog(id);
-      showToast('Article deleted');
-      await loadAllData();
-    }
+    setDeleteBlogTarget({ id, title });
+  };
+
+  const confirmDeleteBlog = async () => {
+    if (!deleteBlogTarget) return;
+    await deleteBlog(deleteBlogTarget.id);
+    showToast('Article deleted');
+    setDeleteBlogTarget(null);
+    await loadAllData();
   };
 
   // --- Prices Management ---
@@ -333,7 +358,7 @@ export default function AdminDashboardPage() {
   // --- UploadThing Media Hub ---
   const [uploadedMediaList, setUploadedMediaList] = useState<Array<{ url: string; name: string }>>([
     { url: '/assets/images/copper_wire_brass_1793892530421.jpg', name: 'copper_wire_brass.jpg' },
-    { url: '/assets/images/ferrous_steel_re.jpg', name: 'ferrous_steel_re.jpg' },
+    { url: '/assets/images/ferrous_steel_recycling_1793892530649.jpg', name: 'ferrous_steel_recycling.jpg' },
     { url: '/assets/images/industrial_scrap_containers_1793892531220.jpg', name: 'industrial_containers.jpg' },
     { url: '/assets/images/hero_scrap_facility_1793892530533.jpg', name: 'hero_scrap_facility.jpg' },
   ]);
@@ -884,7 +909,7 @@ export default function AdminDashboardPage() {
                       shortDesc: '',
                       description: '',
                       icon: 'Hammer',
-                      image: '/assets/images/ferrous_steel_re.jpg',
+                      image: '/assets/images/service-ferrous-steel.jpg',
                       badge: 'We Buy',
                       highlight: '',
                     });
@@ -1893,6 +1918,69 @@ export default function AdminDashboardPage() {
           )}
         </main>
       </div>
+
+      {/* ── Shadcn AlertDialog: Logout Confirmation ── */}
+      <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Sign out of Admin Panel?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Your session will end and you will be redirected to the login page.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-rose-600 hover:bg-rose-700 text-white"
+              onClick={confirmLogout}
+            >
+              Sign Out
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* ── Shadcn AlertDialog: Delete Service Confirmation ── */}
+      <AlertDialog open={!!deleteServiceTarget} onOpenChange={(open) => { if (!open) setDeleteServiceTarget(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Service?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to permanently delete &quot;{deleteServiceTarget?.title}&quot;? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={confirmDeleteService}
+            >
+              Delete Service
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* ── Shadcn AlertDialog: Delete Blog Confirmation ── */}
+      <AlertDialog open={!!deleteBlogTarget} onOpenChange={(open) => { if (!open) setDeleteBlogTarget(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Article?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete &quot;{deleteBlogTarget?.title}&quot;? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={confirmDeleteBlog}
+            >
+              Delete Article
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

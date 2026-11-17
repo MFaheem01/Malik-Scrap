@@ -14,7 +14,7 @@ function getAuthHeaders(): HeadersInit {
 
 // ---- Contact ----
 export async function fetchContactInfo(): Promise<ContactInfo> {
-  const res = await fetch(`${BASE}/api/contact`);
+  const res = await fetch(`${BASE}/api/contact`, { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to load contact info');
   return res.json();
 }
@@ -35,7 +35,7 @@ export async function updateContactInfo(data: Partial<ContactInfo>): Promise<Con
 
 // ---- Services ----
 export async function fetchServices(): Promise<ServiceItem[]> {
-  const res = await fetch(`${BASE}/api/services`);
+  const res = await fetch(`${BASE}/api/services`, { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to load services');
   return res.json();
 }
@@ -76,7 +76,7 @@ export async function deleteService(id: string): Promise<boolean> {
 
 // ---- Blogs ----
 export async function fetchBlogs(): Promise<BlogPost[]> {
-  const res = await fetch(`${BASE}/api/blogs`);
+  const res = await fetch(`${BASE}/api/blogs`, { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to load blog posts');
   return res.json();
 }
