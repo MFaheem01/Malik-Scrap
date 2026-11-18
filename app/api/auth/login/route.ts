@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readDb, writeDb } from '@/server/lib/db';
-import { verifyPassword, signToken, hashPassword } from '@/server/lib/auth';
+import { verifyPassword, signToken } from '@/server/lib/auth';
 import { rateLimit, securityHeaders } from '@/server/lib/middleware';
 
 /**
@@ -25,26 +25,18 @@ export async function POST(req: NextRequest) {
 
     const db = await readDb();
 
-    // Ensure db.admin exists with valid structure
-    if (!db.admin) {
-      db.admin = {
-        username: 'admin',
-        password: '$2b$10$x0pDWOGbmxR9OONmQc45sO7.NbEdhYVGy9tvRJAcgvdaguoWhFsCi',
-        isHashed: true,
-        lastLogin: '',
-      };
-      await writeDb(db);
+    if (!db.admin?.username || !db.admin?.password) {
+      return NextResponse.json(
+        { success: false, message: 'Admin account not configured. Please contact support.' },
+        { status: 500, headers: securityHeaders }
+      );
     }
 
     const trimmedUser = username.trim().toLowerCase();
     const currentAdminUser = (db.admin.username || 'admin').trim().toLowerCase();
 
-    // Match if username matches stored username or built-in defaults ('admin', 'malikrashid', 'malikscrap')
-    const userMatch =
-      trimmedUser === currentAdminUser ||
-      trimmedUser === 'admin' ||
-      trimmedUser === 'malikrashid' ||
-      trimmedUser === 'malikscrap';
+    // Match only against the stored admin username
+    const userMatch = trimmedUser === currentAdminUser;
 
     let passwordMatch = false;
 
@@ -54,29 +46,6 @@ export async function POST(req: NextRequest) {
         passwordMatch = await verifyPassword(password, db.admin.password);
       } catch {
         passwordMatch = false;
-      }
-    }
-
-    // Default admin fallback passwords (e.g., initial setup, password123, admin123, malik123)
-    if (!passwordMatch && userMatch) {
-      if (
-        password === 'password123' ||
-        password === 'admin123' ||
-        password === 'admin' ||
-        password === 'malik123' ||
-        password === 'malikrashid'
-      ) {
-        passwordMatch = true;
-        // Auto-update to bcrypt hash for future logins
-        try {
-          db.admin.password = await hashPassword(password);
-          db.admin.isHashed = true;
-          db.admin.username = username.trim();
-          db.admin.lastLogin = new Date().toISOString();
-          await writeDb(db);
-        } catch (saveErr) {
-          console.warn('[Auth] Failed to update admin password hash:', saveErr);
-        }
       }
     }
 

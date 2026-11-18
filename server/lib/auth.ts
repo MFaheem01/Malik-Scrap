@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'malik-scrap-jwt-secret-key-production-2026-auth-session';
+const JWT_SECRET = process.env.JWT_SECRET || 'malik-scrap-jwt-secret-key-production-2026';
 const JWT_EXPIRY = '8h';
 const BCRYPT_ROUNDS = 12;
 

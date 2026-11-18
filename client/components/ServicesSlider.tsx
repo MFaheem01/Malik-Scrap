@@ -149,7 +149,7 @@ export const ServicesSlider: React.FC<ServicesSliderProps> = ({
                 key={`${service.id}-${index}`}
                 className="bg-white rounded-lg border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group hover:-translate-y-1"
               >
-                <div className="h-44 w-full relative overflow-hidden bg-slate-900">
+                <div className="h-56 w-full relative overflow-hidden bg-slate-900">
                   <img
                     src={service.image}
                     alt={service.title}
@@ -229,7 +229,7 @@ export const ServicesSlider: React.FC<ServicesSliderProps> = ({
       {selectedService && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
           <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-slate-100 relative">
-            <div className="relative h-60 w-full overflow-hidden">
+            <div className="relative h-72 w-full overflow-hidden">
               <img
                 src={selectedService.image}
                 alt={selectedService.title}

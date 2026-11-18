@@ -24,7 +24,19 @@
     },
     "_id": "main"
   },
-  "services": [],
+  "services": [
+    {
+      "id": "srv-1795019862640",
+      "title": "eioerioerjioerjioererjierji",
+      "category": "Ferrous Scrap",
+      "shortDesc": "erkjhgekrherkierhi",
+      "description": "kjhkjerherjkherjkerihjhkerjhkjk",
+      "icon": "Hammer",
+      "image": "https://utfs.io/f/eJ0GItCtCju0oAYMf4c37Yp9EqJgS8FelnvQkZctbL6CWuyr",
+      "badge": "kdfuhdvfukjdfrui",
+      "highlight": "uigjjgjh"
+    }
+  ],
   "blogs": [
     {
       "id": "blog-1",
@@ -217,7 +229,7 @@
     "username": "admin",
     "password": "$2b$10$x0pDWOGbmxR9OONmQc45sO7.NbEdhYVGy9tvRJAcgvdaguoWhFsCi",
     "isHashed": true,
-    "lastLogin": "2026-11-17T17:41:58.529Z",
+    "lastLogin": "2026-11-18T16:36:54.719Z",
     "_id": "main"
   }
 }

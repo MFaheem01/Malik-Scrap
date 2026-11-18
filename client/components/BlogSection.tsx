@@ -112,7 +112,7 @@ export const BlogSection: React.FC<BlogSectionProps> = ({ blogs }) => {
                 className="bg-white rounded-lg border border-slate-200/90 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group hover:-translate-y-1"
               >
                 {/* Image Header with Badge and Title Overlay */}
-                <div className="h-44 w-full relative overflow-hidden bg-slate-900">
+                <div className="h-56 w-full relative overflow-hidden bg-slate-900">
                   <img
                     src={post.image}
                     alt={post.title}

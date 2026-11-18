@@ -85,6 +85,8 @@ export default function AdminDashboardPage() {
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [deleteServiceTarget, setDeleteServiceTarget] = useState<{ id: string; title: string } | null>(null);
   const [deleteBlogTarget, setDeleteBlogTarget] = useState<{ id: string; title: string } | null>(null);
+  // Success dialog state
+  const [successDialog, setSuccessDialog] = useState<{ title: string; message: string } | null>(null);
 
   const [contact, setContact] = useState<ContactInfo | null>(null);
   const [services, setServices] = useState<ServiceItem[]>([]);
@@ -153,6 +155,7 @@ export default function AdminDashboardPage() {
     } catch {
       showToast('Error loading backend data from MongoDB');
     } finally {
+      
       setIsLoading(false);
     }
   }, []);
@@ -214,16 +217,22 @@ export default function AdminDashboardPage() {
     try {
       if (isCreatingService) {
         await createService(serviceForm as Omit<ServiceItem, 'id'>);
-        showToast('Scrap purchase service added');
+        setIsCreatingService(false);
+        setEditingService(null);
+        await loadAllData();
+        setSuccessDialog({
+          title: 'Service Added Successfully!',
+          message: `"${serviceForm.title || 'New service'}" has been added and is now live on the website.`,
+        });
       } else if (editingService) {
         await updateService(editingService.id, serviceForm);
         showToast('Scrap purchase service updated');
+        setIsCreatingService(false);
+        setEditingService(null);
+        await loadAllData();
       }
-      setIsCreatingService(false);
-      setEditingService(null);
-      await loadAllData();
     } catch {
-      showToast('Error saving service');
+      showToast('Error saving service — please check your connection and try again');
     }
   };
 
@@ -274,16 +283,22 @@ export default function AdminDashboardPage() {
     try {
       if (isCreatingBlog) {
         await createBlog(blogForm);
-        showToast('Scrap selling guide published');
+        setIsCreatingBlog(false);
+        setEditingBlog(null);
+        await loadAllData();
+        setSuccessDialog({
+          title: 'Article Published Successfully!',
+          message: `"${blogForm.title || 'New article'}" has been published and is now live on the blog.`,
+        });
       } else if (editingBlog) {
         await updateBlog(editingBlog.id, blogForm);
         showToast('Article updated');
+        setIsCreatingBlog(false);
+        setEditingBlog(null);
+        await loadAllData();
       }
-      setIsCreatingBlog(false);
-      setEditingBlog(null);
-      await loadAllData();
     } catch {
-      showToast('Error saving blog article');
+      showToast('Error saving blog article — please check your connection and try again');
     }
   };
 
@@ -1977,6 +1992,29 @@ export default function AdminDashboardPage() {
               onClick={confirmDeleteBlog}
             >
               Delete Article
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* ── Shadcn AlertDialog: Success Confirmation ── */}
+      <AlertDialog open={!!successDialog} onOpenChange={(open) => { if (!open) setSuccessDialog(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-emerald-700">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+              {successDialog?.title}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {successDialog?.message}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              onClick={() => setSuccessDialog(null)}
+            >
+              Great, got it!
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

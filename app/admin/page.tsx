@@ -61,7 +61,7 @@ function LoginForm() {
         <div className="flex justify-center mb-1">
           <Link href="/" className="inline-block">
             <Image
-              src="/assets/images/footer-logo.png"
+              src="/assets/images/Footer-logo.png"
               alt="Malik Scrap Metal Buyers"
               width={190}
               height={50}
