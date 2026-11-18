@@ -395,10 +395,18 @@ export async function readDb(): Promise<DbData> {
     const result: DbData = {
       contact: contact ? { ...initialData.contact, ...(contact as any) } : initialData.contact,
       admin: adminDoc ? { ...initialData.admin, ...(adminDoc as any) } : initialData.admin,
-      services: services.length > 0 ? (services.map(({ _id, ...rest }) => rest) as any) : initialData.services,
-      blogs: blogs.length > 0 ? (blogs.map(({ _id, ...rest }) => rest) as any) : initialData.blogs,
-      prices: prices.length > 0 ? (prices.map(({ _id, ...rest }) => rest) as any) : initialData.prices,
-      consultations: consultations.length > 0 ? (consultations.map(({ _id, ...rest }) => rest) as any) : initialData.consultations,
+      services: Array.isArray(services) && services.length > 0
+        ? (services.map(({ _id, ...rest }) => rest) as any)
+        : (contactDoc ? [] : initialData.services),
+      blogs: Array.isArray(blogs) && blogs.length > 0
+        ? (blogs.map(({ _id, ...rest }) => rest) as any)
+        : (contactDoc ? [] : initialData.blogs),
+      prices: Array.isArray(prices) && prices.length > 0
+        ? (prices.map(({ _id, ...rest }) => rest) as any)
+        : (contactDoc ? [] : initialData.prices),
+      consultations: Array.isArray(consultations)
+        ? (consultations.map(({ _id, ...rest }) => rest) as any)
+        : initialData.consultations,
     };
 
     // Keep local cache synced
@@ -436,25 +444,29 @@ export async function writeDb(data: DbData): Promise<boolean> {
       (async () => {
         await mongo.collection('services').deleteMany({});
         if (data.services.length > 0) {
-          await mongo.collection('services').insertMany(data.services.map((s) => ({ ...s })));
+          const cleanServices = data.services.map(({ _id, ...s }: any) => ({ ...s }));
+          await mongo.collection('services').insertMany(cleanServices);
         }
       })(),
       (async () => {
         await mongo.collection('blogs').deleteMany({});
         if (data.blogs.length > 0) {
-          await mongo.collection('blogs').insertMany(data.blogs.map((b) => ({ ...b })));
+          const cleanBlogs = data.blogs.map(({ _id, ...b }: any) => ({ ...b }));
+          await mongo.collection('blogs').insertMany(cleanBlogs);
         }
       })(),
       (async () => {
         await mongo.collection('prices').deleteMany({});
         if (data.prices.length > 0) {
-          await mongo.collection('prices').insertMany(data.prices.map((p) => ({ ...p })));
+          const cleanPrices = data.prices.map(({ _id, ...p }: any) => ({ ...p }));
+          await mongo.collection('prices').insertMany(cleanPrices);
         }
       })(),
       (async () => {
         await mongo.collection('consultations').deleteMany({});
         if (data.consultations.length > 0) {
-          await mongo.collection('consultations').insertMany(data.consultations.map((c) => ({ ...c })));
+          const cleanConsultations = data.consultations.map(({ _id, ...c }: any) => ({ ...c }));
+          await mongo.collection('consultations').insertMany(cleanConsultations);
         }
       })(),
     ]);

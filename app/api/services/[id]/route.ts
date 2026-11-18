@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readDb, writeDb } from '@/server/lib/db';
 import { requireAuth, rateLimit, securityHeaders, sanitizeString } from '@/server/lib/middleware';
 
+export const dynamic = 'force-dynamic';
+
 type Params = { params: Promise<{ id: string }> };
 
 /** PUT /api/services/[id] — protected */
@@ -13,11 +15,12 @@ export async function PUT(req: NextRequest, { params }: Params) {
   if (authError) return authError;
 
   try {
-    const { id } = await params;
+    const resolvedParams = params instanceof Promise ? await params : params;
+    const id = resolvedParams?.id;
     const body = await req.json();
     const db = await readDb();
 
-    const index = db.services.findIndex((s) => s.id === id);
+    const index = db.services.findIndex((s) => s.id === id || (s as any)._id?.toString() === id);
     if (index === -1) {
       return NextResponse.json({ error: 'Service not found.' }, { status: 404, headers: securityHeaders });
     }
@@ -49,10 +52,11 @@ export async function DELETE(req: NextRequest, { params }: Params) {
   const authError = requireAuth(req);
   if (authError) return authError;
 
-  const { id } = await params;
+  const resolvedParams = params instanceof Promise ? await params : params;
+  const id = resolvedParams?.id;
   const db = await readDb();
   const before = db.services.length;
-  db.services = db.services.filter((s) => s.id !== id);
+  db.services = db.services.filter((s) => s.id !== id && (s as any)._id?.toString() !== id);
 
   if (db.services.length === before) {
     return NextResponse.json({ error: 'Service not found.' }, { status: 404, headers: securityHeaders });

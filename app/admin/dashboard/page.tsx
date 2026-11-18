@@ -31,7 +31,7 @@ import {
   Menu,
   Clock,
 } from 'lucide-react';
-import { Button } from '../../../client/components/ui/button';
+import { Button } from '@/client/components/ui/button';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,19 +41,19 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '../../../client/components/ui/alert-dialog';
-import { Input } from '../../../client/components/ui/input';
-import { Textarea } from '../../../client/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../../client/components/ui/card';
-import { Badge } from '../../../client/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../../client/components/ui/table';
+} from '@/client/components/ui/alert-dialog';
+import { Input } from '@/client/components/ui/input';
+import { Textarea } from '@/client/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/client/components/ui/card';
+import { Badge } from '@/client/components/ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/client/components/ui/table';
 import {
   Sheet,
   SheetTrigger,
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from '../../../client/components/ui/sheet';
+} from '@/client/components/ui/sheet';
 import {
   fetchContactInfo,
   updateContactInfo,
@@ -242,10 +242,14 @@ export default function AdminDashboardPage() {
 
   const confirmDeleteService = async () => {
     if (!deleteServiceTarget) return;
-    await deleteService(deleteServiceTarget.id);
-    showToast('Service removed from database');
-    setDeleteServiceTarget(null);
-    await loadAllData();
+    try {
+      await deleteService(deleteServiceTarget.id);
+      showToast('Service removed from database');
+      setDeleteServiceTarget(null);
+      await loadAllData();
+    } catch (err: any) {
+      showToast(err.message || 'Failed to delete service');
+    }
   };
 
   // --- Blogs Management ---
@@ -308,10 +312,14 @@ export default function AdminDashboardPage() {
 
   const confirmDeleteBlog = async () => {
     if (!deleteBlogTarget) return;
-    await deleteBlog(deleteBlogTarget.id);
-    showToast('Article deleted');
-    setDeleteBlogTarget(null);
-    await loadAllData();
+    try {
+      await deleteBlog(deleteBlogTarget.id);
+      showToast('Article deleted');
+      setDeleteBlogTarget(null);
+      await loadAllData();
+    } catch (err: any) {
+      showToast(err.message || 'Failed to delete blog article');
+    }
   };
 
   // --- Prices Management ---

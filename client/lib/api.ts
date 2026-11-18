@@ -71,7 +71,11 @@ export async function deleteService(id: string): Promise<boolean> {
     method: 'DELETE',
     headers: getAuthHeaders(),
   });
-  return res.ok;
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || err.error || 'Failed to delete service');
+  }
+  return true;
 }
 
 // ---- Blogs ----
@@ -112,12 +116,16 @@ export async function deleteBlog(id: string): Promise<boolean> {
     method: 'DELETE',
     headers: getAuthHeaders(),
   });
-  return res.ok;
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || err.error || 'Failed to delete blog post');
+  }
+  return true;
 }
 
 // ---- Prices ----
 export async function fetchPrices(): Promise<ScrapPrice[]> {
-  const res = await fetch(`${BASE}/api/prices`);
+  const res = await fetch(`${BASE}/api/prices`, { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to load scrap prices');
   return res.json();
 }

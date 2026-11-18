@@ -24,17 +24,57 @@
     },
     "_id": "main"
   },
+  "admin": {
+    "username": "admin",
+    "password": "$2b$10$1juMgzzLWBWTKh3kVqkVUu7cxa5Vp7W/1W6n2RSZkAhMB2Pgmxfsa",
+    "isHashed": true,
+    "lastLogin": "2026-11-18T18:09:58.640Z",
+    "_id": "main"
+  },
   "services": [
     {
-      "id": "srv-1795019862640",
-      "title": "eioerioerjioerjioererjierji",
+      "id": "srv-1",
+      "title": "We Buy Ferrous Metal Scrap",
       "category": "Ferrous Scrap",
-      "shortDesc": "erkjhgekrherkierhi",
-      "description": "kjhkjerherjkherjkerihjhkerjhkjk",
+      "shortDesc": "Immediate purchase of heavy melting steel (HMS 1 & 2), structural I-beams, factory rebar offcuts, plate cuttings, cast iron, and machinery frames.",
+      "description": "We purchase all volumes of ferrous metal scrap directly from fabrication workshops, machine shops, construction contractors, and demolition sites. Full certified weighbridge receipts with direct mill pricing and zero middleman deductions.",
       "icon": "Hammer",
-      "image": "https://utfs.io/f/eJ0GItCtCju0oAYMf4c37Yp9EqJgS8FelnvQkZctbL6CWuyr",
-      "badge": "kdfuhdvfukjdfrui",
-      "highlight": "uigjjgjh"
+      "image": "/assets/images/ferrous_steel_re.jpg",
+      "badge": "High Tonnage",
+      "highlight": "Top cash & wire payout per metric ton with free collection."
+    },
+    {
+      "id": "srv-2",
+      "title": "We Buy Copper Wire & Tubing",
+      "category": "Non-Ferrous Scrap",
+      "shortDesc": "Top-market rates paid for Bare Bright copper wire, Millberry copper, #1 & #2 copper tubing, armored power cables, and transformer windings.",
+      "description": "Sell your copper scrap to certified buyers. Using handheld XRF elemental spectrometers, we grade copper purity on the spot, guaranteeing honest tare deductions and the highest daily payout in cash or instant bank transfer.",
+      "icon": "Zap",
+      "image": "/assets/images/copper_wire_brass_1793892530421.jpg",
+      "badge": "Highest Payout",
+      "highlight": "Instant XRF assay test with immediate payment."
+    },
+    {
+      "id": "srv-6",
+      "title": "We Buy Brass, Batteries & Automotive Scrap",
+      "category": "Automotive & Brass",
+      "shortDesc": "Purchasing yellow and red brass fixtures, bronze bushings, industrial lead-acid batteries, automotive engines, transmissions, and catalytic converters.",
+      "description": "We purchase commercial batches of scrap automotive parts, heavy equipment batteries, and brass plumbing scrap. Certified depollution and recycling documentation provided for all industrial clients.",
+      "icon": "Car",
+      "image": "/assets/images/ferrous_steel_re.jpg",
+      "badge": "Instant Settlement",
+      "highlight": "Certified scale weighing and immediate bank wire."
+    },
+    {
+      "id": "srv-1795026115128",
+      "title": "ffgfgfgg",
+      "category": "Ferrous Scrap",
+      "shortDesc": "fgfgfgfgfg",
+      "description": "tgtytynt",
+      "icon": "Hammer",
+      "image": "/assets/images/service-ferrous-steel.jpg",
+      "badge": "We Buy",
+      "highlight": "fgfgfgbbg"
     }
   ],
   "blogs": [
@@ -89,91 +129,9 @@
       "unit": "per kg",
       "trend": "up",
       "change": "+0.80"
-    },
-    {
-      "metal": "Clean Yellow Brass Solids",
-      "price": "21.50 AED",
-      "unit": "per kg",
-      "trend": "up",
-      "change": "+0.50"
-    },
-    {
-      "metal": "6063 Clean Aluminum Extrusion",
-      "price": "8.20 AED",
-      "unit": "per kg",
-      "trend": "stable",
-      "change": "0.00"
-    },
-    {
-      "metal": "304 Stainless Steel Solids",
-      "price": "5.60 AED",
-      "unit": "per kg",
-      "trend": "up",
-      "change": "+0.30"
-    },
-    {
-      "metal": "HMS 1 & 2 Heavy Melting Steel",
-      "price": "1,450 AED",
-      "unit": "per ton",
-      "trend": "up",
-      "change": "+45.00"
-    },
-    {
-      "metal": "Industrial Lead Batteries",
-      "price": "4.90 AED",
-      "unit": "per kg",
-      "trend": "stable",
-      "change": "0.00"
-    },
-    {
-      "metal": "Scrap Electric Motors",
-      "price": "6.50 AED",
-      "unit": "per kg",
-      "trend": "up",
-      "change": "+0.25"
     }
   ],
   "consultations": [
-    {
-      "id": "lead-1794640310343",
-      "name": "Dr. Saeed Bin Talib",
-      "email": "Saeed@example.com",
-      "phone": "+923154937411",
-      "subject": "Scrap Purchase Quote: Free Scrap Container Placement",
-      "message": "wekfhefheihfeifhwef",
-      "date": "2026-11-14 07:11",
-      "status": "New"
-    },
-    {
-      "id": "lead-1794568911905",
-      "name": "wehiu",
-      "email": "mf7227163@gmail.com",
-      "phone": "857459344",
-      "subject": "Sell Scrap Metal - Valuation & Offer Request",
-      "message": "kdjrkddfj",
-      "date": "2026-11-13 11:21",
-      "status": "New"
-    },
-    {
-      "id": "lead-1794568741158",
-      "name": "ueeuif",
-      "email": "mf7227164@gmail.com",
-      "phone": "398573497349857",
-      "subject": "Sell Scrap Metal - Valuation & Offer Request",
-      "message": "34834uergjj",
-      "date": "2026-11-13 11:19",
-      "status": "New"
-    },
-    {
-      "id": "lead-1794568466043",
-      "name": "Dr. Saeed Bin Talib",
-      "email": "Saeed@example.com",
-      "phone": "ewjfwjewjh",
-      "subject": "Sell Scrap Metal - Valuation & Offer Request",
-      "message": "wekjhwehiwuefwi",
-      "date": "2026-11-13 11:14",
-      "status": "New"
-    },
     {
       "id": "lead-1794402032041",
       "name": "Dr. Saeed Bin Talib",
@@ -224,12 +182,5 @@
       "date": "2026-11-08 16:15",
       "status": "In Progress"
     }
-  ],
-  "admin": {
-    "username": "admin",
-    "password": "$2b$10$x0pDWOGbmxR9OONmQc45sO7.NbEdhYVGy9tvRJAcgvdaguoWhFsCi",
-    "isHashed": true,
-    "lastLogin": "2026-11-18T16:36:54.719Z",
-    "_id": "main"
-  }
+  ]
 }

@@ -5,9 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Shield, ArrowRight, Clock, AlertTriangle } from 'lucide-react';
-import { Button } from '../../client/components/ui/button';
-import { Input } from '../../client/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../client/components/ui/card';
+import { Button } from '@/client/components/ui/button';
+import { Input } from '@/client/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/client/components/ui/card';
 import { loginAdmin } from '@/client/lib/api';
 
 function LoginForm() {
